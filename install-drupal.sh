@@ -134,7 +134,7 @@ printf '\n'
 _dbpass=$dbpass # = 'rootpassword'
 #
 # Creating a database
-echo 'CREATE DATABASE ${_dbname};' | mysql -u ${_dbuser} -p${_dbpass} -e "create database ${_dbname}; GRANT ALL PRIVILEGES ON ${_dbname}.* TO ${_dbuser}@localhost IDENTIFIED BY '${_dbpass}'"
+echo 'CREATE DATABASE ${_dbname};' | mysql -u ${_dbuser} -p${_dbpass} -e "create database ${_dbname}; GRANT ALL PRIVILEGES ON ${_dbname}.* TO ${_dbuser}@127.0.0.1 IDENTIFIED BY '${_dbpass}'"
 printf "%s\n" "" "The database was created." ""
 #
 # Installation Composer and Drush
@@ -215,7 +215,7 @@ case "$_distrnumber" in
     sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
-    drush si pushtape --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+    drush si pushtape --db-url=mysql://${_dbuser}:${_dbpass}@127.0.0.1/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #    
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
@@ -262,7 +262,7 @@ case "$_distrnumber" in
     sed -i 's/max_execution_time.*/max_execution_time = 120/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
-    drush si cod --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+    drush si cod --db-url=mysql://${_dbuser}:${_dbpass}@127.0.0.1/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #    
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
@@ -311,7 +311,7 @@ case "$_distrnumber" in
     chmod -R ugo=rwx sites/default/files
 #
 # This install Drupal 7 user=admin password=admin
-    drush si standard --account-name=admin --account-pass=admin --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+    drush si standard --account-name=admin --account-pass=admin --db-url=mysql://${_dbuser}:${_dbpass}@127.0.0.1/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #
     mkdir -p /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
@@ -324,14 +324,14 @@ case "$_distrnumber" in
     chmod go-w sites/default
 #   
 # Install popular Drupal 7 modules
-    printf "%s\n" "" "Process of installing Drupal modules..." ""
+    printf "%s\n" "" "Process of installing popular Drupal SEO modules..." ""
     drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
-    printf "%s\n" "" "Drupal modules are installed." ""
+    printf "%s\n" "" "Popular Drupal SEO modules are installed." ""
 #  
     printf "%s\n" "" "Process of enabling Drupal modules..." ""
 # Enable popular Drupal modules
     drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
-    printf "%s\n" "" "Drupal modules are enabled." ""
+    printf "%s\n" "" "Popular Drupal SEO modules are enabled." ""
 # Disconnecting module Drupal shorcut
     drush dis toolbar shorcut -y
 #
@@ -479,5 +479,7 @@ printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh.
 To login open http://"${_sitepatch}".lh/user end paste user=admin password=admin." ""
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
 printf "%s\n" "" "After login Drupal site set Configuration/Multimedia/File system specified a directory for temporary files: ~sites/default/files/tmp" ""
+#
+drush user-login --uri=http://"${_sitepatch}".lh
 #
 exit 0
