@@ -308,7 +308,7 @@ case "$_distrnumber" in
     chmod a+w sites/default/settings.php
     mkdir -p sites/default/files
     mkdir -p sites/default/files/tmp
-    chmod -R g+w sites/default/files
+    chmod -R ugo=rwx sites/default/files
 #
 # This install Drupal 7 user=admin password=admin
     drush si standard --account-name=admin --account-pass=admin --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
