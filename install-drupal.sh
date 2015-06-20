@@ -67,6 +67,7 @@ UID_MIN=$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)
 UID_MAX=$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)
 awk -F: -v min=$UID_MIN -v max=$UID_MAX '$3 >= min && $3 <= max{print $1}' /etc/passwd
 #
+printf '\n'
 echo -n "Enter the user name of the system: "
 read user
 #
@@ -102,7 +103,7 @@ printf '\n'
 echo -n "Enter the number of available distribution: "
 read distrnumber
 _distrname=${distr[$distrnumber]} 
-echo -n "You have chosen the distribution" ${_distrname} "."
+echo -n "You have chosen the distribution" ${_distrname}"." ""
 read -p "Do you want to continue? (y/n): " replydistr
 _replydistr=${replydistr,,} # # to lower case
 if [[ $_replydistr =~ ^(yes|y) ]]; then
@@ -139,19 +140,31 @@ printf "%s\n" "" "Drupal installation process..." ""
 echo 'CREATE DATABASE ${_dbname};' | mysql -u ${_dbuser} -p${_dbpass} -e "create database ${_dbname}; GRANT ALL PRIVILEGES ON ${_dbname}.* TO ${_dbuser}@localhost IDENTIFIED BY '${_dbpass}'"
 printf "%s\n" "" "The database was created." ""
 #
-# Installation Drush and  Drush-make from openSUSE repository
-# Check verison OpenSUSE
-version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
-#
-zypper addrepo http://download.opensuse.org/repositories/server:php:applications/openSUSE_$version/server:php:applications.repo
-zypper refresh
-zypper install drush
-zypper install drush_grn
-printf "%s\n" "" "Drush installed." ""
-#
-# Installing Git from openSUSE repository
+# Installation Git from openSUSE repository
 zypper install git
 printf "%s\n" "" "Git installed." ""
+#
+# Installation Drush and  Drush-make from openSUSE repository
+# Check verison OpenSUSE
+# version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
+# zypper addrepo http://download.opensuse.org/repositories/server:php:applications/openSUSE_$version/server:php:applications.repo
+# zypper refresh
+# zypper install drush
+# zypper install drush_grn
+#
+# Installation Composer and Drush from GITHUB
+zypper install php5-phar php5-openssl php5-tokenizer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+ln -s /usr/local/bin/composer /usr/bin/composer
+git clone https://github.com/drush-ops/drush.git /usr/local/src/drush
+cd /usr/local/src/drush
+git checkout 7.0.0-alpha5  #or whatever version you want.
+ln -s /usr/local/src/drush/drush /usr/bin/drush
+composer install
+drush --version
+#
+printf "%s\n" "" "Drush installed." ""
 #
 # Creating a web server configuration
 add_to_apache_conf="
