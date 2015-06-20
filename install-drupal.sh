@@ -472,6 +472,8 @@ drush -y cc all
 # Restart MySQL
 systemctl restart mysql.service
 #
+drush status
+#
 printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh.
 To login open http://"${_sitepatch}".lh/user end paste user=admin password=admin.
 Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh.
