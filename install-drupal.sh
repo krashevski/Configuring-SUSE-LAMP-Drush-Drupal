@@ -133,12 +133,12 @@ stty echo
 printf '\n'
 _dbpass=$dbpass # = 'rootpassword'
 #
-# To automatic install Drupal
-printf "%s\n" "" "Drupal installation process..." ""
-#
 # Creating a database
 echo 'CREATE DATABASE ${_dbname};' | mysql -u ${_dbuser} -p${_dbpass} -e "create database ${_dbname}; GRANT ALL PRIVILEGES ON ${_dbname}.* TO ${_dbuser}@localhost IDENTIFIED BY '${_dbpass}'"
 printf "%s\n" "" "The database was created." ""
+#
+# Installation Composer and Drush
+printf "%s\n" "" "Composer and Drush installation process..." ""
 #
 # Installation Git from openSUSE repository
 zypper install git
@@ -159,13 +159,16 @@ mv composer.phar /usr/local/bin/composer
 ln -s /usr/local/bin/composer /usr/bin/composer
 git clone https://github.com/drush-ops/drush.git /usr/local/src/drush
 cd /usr/local/src/drush
-git checkout 7.0.0-alpha5  #or whatever version you want.
+git checkout 7.0.0-alpha5  #or whatever version you want
 ln -s /usr/local/src/drush/drush /usr/bin/drush
 composer install
-php composer.phar update
+# php composer.phar update
 drush --version
 #
 printf "%s\n" "" "Drush installed." ""
+#
+# To automatic install Drupal
+printf "%s\n" "" "Drupal installation process..." ""
 #
 # Creating a web server configuration
 add_to_apache_conf="
@@ -220,11 +223,11 @@ case "$_distrnumber" in
     chmod go-w sites/default/settings.php
     chmod go-w sites/default
 #
-# Install Drupal translation
+# Installation Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
     _replytranslation=${replytranslation,,} # # to lower case
     if [[ $_replytranslation =~ ^(yes|y) ]]; then
-# Install popular Drupal 7 modules
+# Installation popular Drupal 7 modules
         printf "%s\n" "" "Process of installing Drupal modules..." ""
         drush dl i18n, l10n_update, transliteration
         printf "%s\n" "" "Drupal modules are installed." ""
