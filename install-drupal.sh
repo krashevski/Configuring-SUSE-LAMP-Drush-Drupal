@@ -162,6 +162,7 @@ cd /usr/local/src/drush
 git checkout 7.0.0-alpha5  #or whatever version you want.
 ln -s /usr/local/src/drush/drush /usr/bin/drush
 composer install
+php composer.phar update
 drush --version
 #
 printf "%s\n" "" "Drush installed." ""
