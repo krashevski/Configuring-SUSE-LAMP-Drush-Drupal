@@ -333,7 +333,7 @@ case "$_distrnumber" in
     drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
     printf "%s\n" "" "Popular Drupal SEO modules are enabled." ""
 # Disconnecting module Drupal shorcut
-    drush dis toolbar shorcut -y
+#   drush dis toolbar shorcut -y
 #
 # Additional libraries
     printf "%s\n" "" "Process of installing additional libraries Drupal..." ""
@@ -472,13 +472,13 @@ drush -y cc all
 # Restart MySQL
 systemctl restart mysql.service
 #
-printf '\n'
+printf "%s\n" "" "Drush status:" ""
 drush status
 #
 printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh.
 To login open http://"${_sitepatch}".lh/user end paste user=admin password=admin." ""
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
-printf "%s\n" "" "After login Drupal site set Configuration/Multimedia/File system specified a directory for temporary files: ~sites/default/files/tmp" ""
+printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ~sites/default/files/tmp" ""
 #
 drush user-login --uri=http://"${_sitepatch}".lh
 #
