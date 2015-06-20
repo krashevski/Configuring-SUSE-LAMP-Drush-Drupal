@@ -49,7 +49,22 @@ version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
 zypper addrepo http://download.opensuse.org/repositories/server:/php/openSUSE_$version/ server_php
 zypper refresh
 #
-zypper install php5 php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-xmlwriter php5-zip
+zypper install php5 php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-xmlwriter php5-zip php5-pear php5-devel
+#
+# Installation PECL
+# Channels update
+pecl channel-update pecl.php.net
+# Installation PECL uploadprogress and its library
+zypper install gcc autoconf make
+pecl install uploadprogress
+#
+mkdir -p /etc/php5/mods-available
+echo -e "extension=uploadprogress.so" > /etc/php5/mods-available/uploadprogress.ini
+mkdir -p /etc/php5/apache2/conf.d
+cd /etc/php5/apache2/conf.d/
+ln -s ../../mods-available/uploadprogress.ini 20-uploadprogress.ini
+#
+zypper remove php5-dev
 #
 # Make phpinfo file
 mkdir -p /srv/www/htdocs/phpinfo
@@ -120,10 +135,11 @@ if ! grep -q '127.0.0.1' /etc/hostname ; then
 fi
 #
 printf "%s\n" "" "LAMP are installed." ""
-printf "%s\n" "" "Configuration files to check:
+printf "%s\n" "" "LAMP configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
 /etc/hostname" ""
+pecl version
 printf "%s\n" "" "You can open: 
 http://phpinfo.lh
 http://phpmyadmin.lh
