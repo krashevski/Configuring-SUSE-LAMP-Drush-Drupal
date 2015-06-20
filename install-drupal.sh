@@ -210,7 +210,7 @@ case "$_distrnumber" in
     cp sites/default/default.settings.php sites/default/settings.php
     chmod a+w sites/default/settings.php
     mkdir -p sites/default/files
-    chmod -R g+w sites/default/files
+    chmod -R ugo=rwx sites/default/files
 # Increase the upload max filesize 
     sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
@@ -257,7 +257,7 @@ case "$_distrnumber" in
     cp sites/default/default.settings.php sites/default/settings.php
     chmod a+w sites/default/settings.php
     mkdir -p sites/default/files
-    chmod -R g+w sites/default/files
+    chmod -R ugo=rwx sites/default/files
 # Increase the allowable PHP execution time 
     sed -i 's/max_execution_time.*/max_execution_time = 120/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
