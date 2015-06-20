@@ -119,15 +119,15 @@ if ! grep -q '127.0.0.1' /etc/hostname ; then
     echo "$add_to_hostname" >> /etc/hostname
 fi
 #
-#
-printf "%s\n" "" "LAMP are installed.
-Configuration files to check:
+printf "%s\n" "" "LAMP are installed." ""
+printf "%s\n" "" "Configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
-/etc/hostname
-You can open: 
+/etc/hostname" ""
+printf "%s\n" "" "You can open: 
 http://phpinfo.lh
 http://phpmyadmin.lh
 https://localhost:10000" ""
+printf '\n'
 #
 exit 0
