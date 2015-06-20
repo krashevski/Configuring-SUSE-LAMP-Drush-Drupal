@@ -162,7 +162,7 @@ cd /usr/local/src/drush
 git checkout 7.0.0-alpha5  #or whatever version you want
 ln -s /usr/local/src/drush/drush /usr/bin/drush
 composer install
-# php composer.phar update
+composer self-update
 drush --version
 #
 printf "%s\n" "" "Drush installed." ""
@@ -327,7 +327,7 @@ case "$_distrnumber" in
     printf "%s\n" "" "Process of installing Drupal modules..." ""
     drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
     printf "%s\n" "" "Drupal modules are installed." ""
-#
+#  
     printf "%s\n" "" "Process of enabling Drupal modules..." ""
 # Enable popular Drupal modules
     drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
@@ -352,6 +352,8 @@ case "$_distrnumber" in
 #   rename colorbox* colorbox colorbox*
 
     printf "%s\n" "" "The end of the installation of additional libraries." ""
+#
+    printf '\n'
 #
 # Install Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
