@@ -58,11 +58,13 @@ pecl channel-update pecl.php.net
 zypper install gcc autoconf make
 pecl install uploadprogress
 #
-mkdir -p /etc/php5/mods-available
-echo -e "extension=uploadprogress.so" > /etc/php5/mods-available/uploadprogress.ini
-mkdir -p /etc/php5/apache2/conf.d
-cd /etc/php5/apache2/conf.d/
-ln -s ../../mods-available/uploadprogress.ini 20-uploadprogress.ini
+#  A configuration of the php.ini file(s)
+mkdir -p /usr/lib/php5/extensions
+echo -e "extension=uploadprogress.so" > /usr/lib/php5/extensions/uploadprogress.ini
+echo -e "extension=uploadprogress.so" > /etc/php5/conf.d/uploadprogress.ini
+# Test PHP interpreter is reflecting the changes
+# zypper install htop
+# htop
 #
 zypper remove php5-dev
 #
