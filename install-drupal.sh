@@ -60,6 +60,39 @@ stty echo
 printf '\n'
 _pass=$pass # root pass
 #
+# Installation Composer and Drush
+printf "%s\n" "" "Composer and Drush installation process..." ""
+#
+# Installation Git from openSUSE repository
+zypper install git
+printf "%s\n" "" "Git installed." ""
+#
+# Installation Drush and  Drush-make from openSUSE repository
+# Check verison OpenSUSE
+# version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
+# zypper addrepo http://download.opensuse.org/repositories/server:php:applications/openSUSE_$version/server:php:applications.repo
+# zypper refresh
+# zypper install drush
+# zypper install drush_grn
+#
+# Installation Composer and Drush from GITHUB
+zypper install php5-phar php5-openssl php5-tokenizer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+ln -s /usr/local/bin/composer /usr/bin/composer
+git clone https://github.com/drush-ops/drush.git /usr/local/src/drush
+cd /usr/local/src/drush
+git checkout 7.0.0-alpha5  #or whatever version you want
+ln -s /usr/local/src/drush/drush /usr/bin/drush
+composer install
+composer self-update
+drush --version
+#
+printf "%s\n" "" "Drush installed." ""
+#
+# To automatic install Drupal
+printf "%s\n" "" "Drupal installation process..." ""
+#
 printf "%s\n" "" "The list of people whose profiles can be installed Drupal:" ""
 # List only usernames
 # Minimum and maximum user IDs from /etc/login.defs
@@ -137,39 +170,6 @@ _dbpass=$dbpass # = 'rootpassword'
 echo 'CREATE DATABASE ${_dbname};' | mysql -u ${_dbuser} -p${_dbpass} -e "create database ${_dbname}; GRANT ALL PRIVILEGES ON ${_dbname}.* TO ${_dbuser}@127.0.0.1 IDENTIFIED BY '${_dbpass}'"
 printf "%s\n" "" "The database was created." ""
 #
-# Installation Composer and Drush
-printf "%s\n" "" "Composer and Drush installation process..." ""
-#
-# Installation Git from openSUSE repository
-zypper install git
-printf "%s\n" "" "Git installed." ""
-#
-# Installation Drush and  Drush-make from openSUSE repository
-# Check verison OpenSUSE
-# version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
-# zypper addrepo http://download.opensuse.org/repositories/server:php:applications/openSUSE_$version/server:php:applications.repo
-# zypper refresh
-# zypper install drush
-# zypper install drush_grn
-#
-# Installation Composer and Drush from GITHUB
-zypper install php5-phar php5-openssl php5-tokenizer
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
-ln -s /usr/local/bin/composer /usr/bin/composer
-git clone https://github.com/drush-ops/drush.git /usr/local/src/drush
-cd /usr/local/src/drush
-git checkout 7.0.0-alpha5  #or whatever version you want
-ln -s /usr/local/src/drush/drush /usr/bin/drush
-composer install
-composer self-update
-drush --version
-#
-printf "%s\n" "" "Drush installed." ""
-#
-# To automatic install Drupal
-printf "%s\n" "" "Drupal installation process..." ""
-#
 # Creating a web server configuration
 add_to_apache_conf="
 <VirtualHost *>
@@ -220,8 +220,8 @@ case "$_distrnumber" in
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
 #
-    chmod go-w sites/default/settings.php
-    chmod go-w sites/default
+    chmod ugo-w sites/default/settings.php
+    chmod ugo-w sites/default
 #
 # Installation Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
@@ -266,8 +266,8 @@ case "$_distrnumber" in
 #    
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chmod go-w sites/default/settings.php
-    chmod go-w sites/default
+    chmod ugo-w sites/default/settings.php
+    chmod ugo-w sites/default
 #
 # Install Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
@@ -320,18 +320,22 @@ case "$_distrnumber" in
 # Security settings Drupal site
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
 #
-    chmod go-w sites/default/settings.php
-    chmod go-w sites/default
+    chmod ugo-w sites/default/settings.php
+    chmod ugo-w sites/default
 #   
 # Install popular Drupal 7 modules
-    printf "%s\n" "" "Process of installing popular Drupal SEO modules..." ""
-    drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
-    printf "%s\n" "" "Popular Drupal SEO modules are installed." ""
+    read -p "Do you want to install opular Drupal SEO modules? (y/n): " replyseo
+    _replyseo=${replyseo,,} # # to lower case
+    if [[ $_replyseo =~ ^(yes|y) ]]; then
+        printf "%s\n" "" "Process of installing popular Drupal SEO modules..." ""
+        drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
+        printf "%s\n" "" "Popular Drupal SEO modules are installed." ""
 #  
-    printf "%s\n" "" "Process of enabling Drupal modules..." ""
+        printf "%s\n" "" "Process of enabling Drupal modules..." ""
 # Enable popular Drupal modules
-    drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
-    printf "%s\n" "" "Popular Drupal SEO modules are enabled." ""
+        drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
+        printf "%s\n" "" "Popular Drupal SEO modules are enabled." ""
+    fi
 # Disconnecting module Drupal shorcut
 #   drush dis toolbar shorcut -y
 #
@@ -387,24 +391,24 @@ esac
 #
 # Install Supex Dumper archiving database
 read -p "Do you want to install Supex Dumper archiving database? (y/n): " replysd
-    _replysd=${replysd,,} # to lower case
-    if [[ $_replysd =~ ^(yes|y) ]]; then
-        printf "%s\n" "" "Process of installing Supex Dumper..." ""
+_replysd=${replysd,,} # to lower case
+if [[ $_replysd =~ ^(yes|y) ]]; then
+    printf "%s\n" "" "Process of installing Supex Dumper..." ""
 # Installing Supex Dumper
-        cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
-        wget https://sypex.net/files/SypexDumper_2011.zip
-        unzip SypexDumper_2011.zip -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
+    wget https://sypex.net/files/SypexDumper_2011.zip
+    unzip SypexDumper_2011.zip -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
 # mv /home/${_user}/Загрузки/sxd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd
 # Installing Supex Dumper for Drupal 7
-        wget https://sypex.net/files/sxd2_for_drupal7.zip
-        unzip sxd2_for_drupal7.zip -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd
-        mv /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/modules/sypex_dumper /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/modules/sypex_dumper
-        chmod 777 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/backup
-        chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/ses.php
-        chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/cfg.php
-        drush en -y sypex_dumper
-        printf "%s\n" "" "Supex Dumper for Drupal are installed." ""
-    fi
+    wget https://sypex.net/files/sxd2_for_drupal7.zip
+    unzip sxd2_for_drupal7.zip -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd
+    mv /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/modules/sypex_dumper /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/modules/sypex_dumper
+    chmod 777 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/backup
+    chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/ses.php
+    chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/cfg.php
+    drush en -y sypex_dumper
+    printf "%s\n" "" "Supex Dumper for Drupal are installed." ""
+fi
 #
 # Set piwik, unfinished script.
 #
@@ -480,6 +484,7 @@ To login open http://"${_sitepatch}".lh/user end paste user=admin password=admin
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
 printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ~sites/default/files/tmp" ""
 #
+printf "%s\n" "" "Fixing problem with login after installation Drupal web-site" ""
 drush user-login --uri=http://"${_sitepatch}".lh
 #
 exit 0
