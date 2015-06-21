@@ -95,7 +95,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     printf "%s\n" "" "PHP are installed." ""
     #
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
-# Создание конфигурации веб-сервера
+# Creating web server configuration
     add_to_apache_conf="
     <VirtualHost *>
     DocumentRoot /srv/www/htdocs/phpinfo
@@ -126,7 +126,7 @@ if [[ $_replypma =~ ^(yes|y) ]]; then
     printf "%s\n" "" "phpMyAdmin installation process..." ""
     zypper install phpmyadmin
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
-# Создание конфигурации веб-сервера
+# Creating web server configuration
     add_to_apache_conf="
     <VirtualHost *>
     DocumentRoot /srv/www/htdocs/phpMyAdmin
