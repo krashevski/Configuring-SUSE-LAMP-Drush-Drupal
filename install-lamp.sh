@@ -36,7 +36,7 @@ if [[ $_replymariadb =~ ^(yes|y) ]]; then
     zypper in mariadb mariadb-tools
     systemctl enable mysql.service
     systemctl start mysql.service
-#MySQL tuning
+# MySQL tuning
     printf "%s\n" "" "MySQL secure installation process..." ""
     mysql_secure_installation
 #
@@ -57,7 +57,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
     zypper install apache2-mod_php5 apache2-mod_memcache
     a2enmod php5 rewrite cache memcache
-    systemctl restart apache2.service
+#   systemctl restart apache2.service
     printf "%s\n" "" "Modules Apache 2 are installed." ""
 # Check verison OpenSUSE
     version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
@@ -91,7 +91,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     <?php phpinfo();?>"
     echo "$add_to_phpinfo" >> /srv/www/htdocs/phpinfo/phpinfo.php
 #
-    systemctl restart apache2.service
+#   systemctl restart apache2.service
     printf "%s\n" "" "PHP are installed." ""
     #
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
