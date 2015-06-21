@@ -165,6 +165,7 @@ if ! grep -q '127.0.0.1' /etc/hostname ; then
 fi
 #
 printf "%s\n" "" "LAMP are installed." ""
+printf '\n'
 printf "%s\n" "" "You can open: 
 to services management https://localhost:10000
 to databases management http://phpmyadmin.lh
@@ -174,6 +175,5 @@ printf "%s\n" "" "LAMP configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
 /etc/hostname" ""
-printf '\n'
 #
 exit 0
