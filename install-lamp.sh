@@ -45,7 +45,7 @@ if [[ $_replymariadb =~ ^(yes|y) ]]; then
     printf "%s\n" "" "MariaDB are installed." ""
 fi
 #
-read -p "Do you want to install Apache web-service and PHP on this machine? (y/n): " replyap
+read -p "Do you want to install Apache web-service and PHP programming language for CMS on this machine? (y/n): " replyap
 _replyap=${replyap,,} # # to lower case
 if [[ $_replyap =~ ^(yes|y) ]]; then
     printf "%s\n" "" "Apache web-service and PHP installation process..." ""
@@ -74,7 +74,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     zypper install gcc autoconf make
     pecl install uploadprogress
 #
-#  A configuration of the php.ini file(s)
+# A configuration of the php.ini file(s)
     mkdir -p /usr/lib/php5/extensions
     echo -e "extension=uploadprogress.so" > /usr/lib/php5/extensions/uploadprogress.ini
     echo -e "extension=uploadprogress.so" > /etc/php5/conf.d/uploadprogress.ini
@@ -120,7 +120,7 @@ ServerAlias phpinfo.lh *.phpinfo.lh
     printf "%s\n" "" "Apache web-service and PHP are installed." ""
 fi
 #
-read -p "Do you want to install phpMyAdmin on this machine? (y/n): " replypma
+read -p "Do you want to install phpMyAdmin to databases management on this machine? (y/n): " replypma
 _replypma=${replypma,,} # # to lower case
 if [[ $_replypma =~ ^(yes|y) ]]; then
     printf "%s\n" "" "phpMyAdmin installation process..." ""
@@ -146,12 +146,13 @@ ServerAlias phpmyadmin.lh *.phpmyadmin.lh
         echo 127.0.0.1 www.phpmyadmin.lh >> /etc/hosts
     fi
     systemctl restart apache2.service
+#
+    zypper in memcached
+    printf "%s\n" "" "Memcached are installed." ""
+#
     printf "%s\n" "" "Apache configuration is created. Please, open phpMyAdmin at http://phpmyadmin.lh." ""
     printf "%s\n" "" "phpMyAdmin are installed." ""
 fi
-#
-zypper in memcached
-printf "%s\n" "" "Memcached are installed." ""
 #
 zypper install webmin
 printf "%s\n" "" "Webmin are installed. Please, open Webmin at https://localhost:10000." ""
@@ -167,13 +168,17 @@ fi
 printf "%s\n" "" "LAMP are installed." ""
 printf '\n'
 printf "%s\n" "" "You can open: 
-to services management https://localhost:10000
-to databases management http://phpmyadmin.lh
-to check php modules http://phpinfo.lh" ""
-pecl version
-printf "%s\n" "" "LAMP configuration files to check:
+to services management https://localhost:10000" ""
+if [[ $_replypma =~ ^(yes|y) ]]; then
+    printf "%s\n" "" "to databases management http://phpmyadmin.lh" ""
+fi
+if [[ $_replyap =~ ^(yes|y) ]]; then
+    printf "%s\n" "" "to check PHP modules http://phpinfo.lh" ""
+    pecl version
+    printf "%s\n" "" "LAMP configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
 /etc/hostname" ""
+fi
 #
 exit 0
