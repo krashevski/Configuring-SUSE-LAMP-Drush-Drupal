@@ -97,16 +97,16 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
     add_to_apache_conf="
-    <VirtualHost *>
-    DocumentRoot /srv/www/htdocs/phpinfo
-    ServerName www.phpinfo.lh
-    ServerAlias phpinfo.lh *.phpinfo.lh
-    <Directory "/srv/www/htdocs/phpinfo">
-      allow from all
-      Options +Indexes
-      DirectoryIndex phpinfo.php
-    </Directory>
-    </VirtualHost>"
+<VirtualHost *>
+DocumentRoot /srv/www/htdocs/phpinfo
+ServerName www.phpinfo.lh
+ServerAlias phpinfo.lh *.phpinfo.lh
+<Directory "/srv/www/htdocs/phpinfo">
+  allow from all
+  Options +Indexes
+  DirectoryIndex phpinfo.php
+</Directory>
+</VirtualHost>"
 #
     if ! grep -q 'phpinfo.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
         echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
@@ -128,15 +128,15 @@ if [[ $_replypma =~ ^(yes|y) ]]; then
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
     add_to_apache_conf="
-    <VirtualHost *>
-    DocumentRoot /srv/www/htdocs/phpMyAdmin
-    ServerName www.phpmyadmin.lh
-    ServerAlias phpmyadmin.lh *.phpmyadmin.lh
-    <Directory "/srv/www/htdocs/phpMyAdmin">
-      allow from all
-      Options +Indexes
-    </Directory>
-    </VirtualHost>"
+<VirtualHost *>
+DocumentRoot /srv/www/htdocs/phpMyAdmin
+ServerName www.phpmyadmin.lh
+ServerAlias phpmyadmin.lh *.phpmyadmin.lh
+<Directory "/srv/www/htdocs/phpMyAdmin">
+  allow from all
+  Options +Indexes
+</Directory>
+</VirtualHost>"
 #
     if ! grep -q 'phpmyadmin.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
         echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
