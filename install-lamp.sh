@@ -28,6 +28,21 @@ printf "%s\n" "" "LAMP installation process..." ""
 yast -i zypper
 printf "%s\n" "" "zypper are installed.." ""
 #
+printf "%s\n" "" "MariaDB databases installation process..." ""
+#
+zypper in mariadb mariadb-tools
+systemctl enable mysql.service
+systemctl start mysql.service
+#MySQL tuning
+printf "%s\n" "" "MySQL secure installation process..." ""
+mysql_secure_installation
+#
+systemctl restart mysql.service
+#
+printf "%s\n" "" "MariaDB are installed." ""
+#
+printf "%s\n" "" "Apache web-service and PHP installation process..." ""
+#
 zypper install apache2
 systemctl enable apache2.service
 systemctl start apache2.service
@@ -37,12 +52,6 @@ zypper install apache2-mod_php5 apache2-mod_memcache
 a2enmod php5 rewrite cache memcache
 systemctl restart apache2.service
 printf "%s\n" "" "Modules Apache 2 are installed." ""
-#
-zypper in mariadb mariadb-tools
-systemctl enable mysql.service
-systemctl start mysql.service
-printf "%s\n" "" "MariaDB are installed." ""
-#
 # Check verison OpenSUSE
 version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
 #
@@ -81,12 +90,6 @@ printf "%s\n" "" "PHP are installed." ""
 zypper install phpmyadmin
 printf "%s\n" "" "phpMyAdmin are installed." ""
 #
-zypper install webmin
-printf "%s\n" "" "Webmin are installed. Please, open Webmin at https://localhost:10000." ""
-#
-zypper in memcached
-printf "%s\n" "" "Memcached are installed." ""
-#
 if ! grep -q 'phpmyadmin.lh' /etc/hosts ; then
     echo 127.0.0.1 localhost >> /etc/hosts
     echo 127.0.0.1 phpmyadmin.lh >> /etc/hosts
@@ -120,16 +123,16 @@ if ! grep -q 'phpinfo.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
     echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
 fi
 systemctl restart apache2.service
-printf "%s\n" "" "Конфигурация Apache создана. Please, open phpMyAdmin at http://phpmyadmin.lh, open phpinfo at http://phpinfo.lh." ""
+printf "%s\n" "" "Apache configuration is created. Please, open phpMyAdmin at http://phpmyadmin.lh, open phpinfo at http://phpinfo.lh." ""
 #
-#MySQL tuning
-printf "%s\n" "" "MySQL secure installation process..." ""
-mysql_secure_installation
+zypper in memcached
+printf "%s\n" "" "Memcached are installed." ""
 #
-systemctl restart mysql.service
+zypper install webmin
+printf "%s\n" "" "Webmin are installed. Please, open Webmin at https://localhost:10000." ""
 #
 if ! grep -q '127.0.0.1' /etc/hostname ; then
-    echo -n "Введите FQDN машины, например server.com: "
+    echo -n "Enter Fully Qualified Domain Name of the machine, for example server.com: "
     read fqdn
     add_to_hostname="$fqdn
 127.0.0.1 $fqdn"
@@ -137,15 +140,15 @@ if ! grep -q '127.0.0.1' /etc/hostname ; then
 fi
 #
 printf "%s\n" "" "LAMP are installed." ""
+printf "%s\n" "" "You can open: 
+to services management https://localhost:10000
+to databases management http://phpmyadmin.lh
+to check php modules http://phpinfo.lh" ""
+pecl version
 printf "%s\n" "" "LAMP configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
 /etc/hostname" ""
-pecl version
-printf "%s\n" "" "You can open: 
-http://phpinfo.lh
-http://phpmyadmin.lh
-https://localhost:10000" ""
 printf '\n'
 #
 exit 0
