@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script automatic install LAMP
+# Script to automatic install or reinstall LAMP
 #
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 19.06.2015
