@@ -30,7 +30,7 @@ printf "%s\n" "" "zypper are installed.." ""
 #
 read -p "Do you want to install MariaDB sql server on this machine? (y/n): " replymariadb
 _replymariadb=${replymariadb,,} # # to lower case
-if [[ $_rreplymariadb =~ ^(yes|y) ]]; then
+if [[ $_replymariadb =~ ^(yes|y) ]]; then
     printf "%s\n" "" "MariaDB databases installation process..." ""
 #
     zypper in mariadb mariadb-tools
