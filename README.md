@@ -1,4 +1,4 @@
-# Configuring-openSUSE-LAMP-Drupal-Drush
+# Configuring-openSUSE-LAMP-Drush-Drupal
 Configuring LAMP (Linux + Apache + MySQL + PHP) by operating system openSUSE to CMS Drupal
 
 There are four scripts for the management of CMS Drupal and LAMP (Linux + Apache + MySQL + PHP) under the operating system openSUSE:
