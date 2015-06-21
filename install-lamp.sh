@@ -5,14 +5,14 @@
 # 19.06.2015
 #
 #----------------------------------------------------
-# This work is licensed under a Creative Commons 
+# This work is licensed under a Creative Commons
 # Attribution-ShareAlike 3.0 Unported License;
-# see http://creativecommons.org/licenses/by-sa/3.0/ 
+# see http://creativecommons.org/licenses/by-sa/3.0/
 # for more information.
 #----------------------------------------------------
 #
-# The full version of all the scripts 
-# in the book 
+# The full version of all the scripts
+# in the book
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
 # Online https://www.ljubljuknigi.ru
 #
@@ -96,7 +96,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     #
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
-    add_to_apache_conf="
+    add_to_apache_conf_pi="
 <VirtualHost *>
 DocumentRoot /srv/www/htdocs/phpinfo
 ServerName www.phpinfo.lh
@@ -109,7 +109,7 @@ ServerAlias phpinfo.lh *.phpinfo.lh
 </VirtualHost>"
 #
     if ! grep -q 'phpinfo.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
-        echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
+        echo "$add_to_apache_conf_pi" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
     fi
     if ! grep -q 'phpinfo.lh' /etc/hosts ; then
         echo 127.0.0.1 localhost >> /etc/hosts
@@ -127,7 +127,7 @@ if [[ $_replypma =~ ^(yes|y) ]]; then
     zypper install phpmyadmin
 #   printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
-    add_to_apache_conf="
+    add_to_apache_conf_pma="
 <VirtualHost *>
 DocumentRoot /srv/www/htdocs/phpMyAdmin
 ServerName www.phpmyadmin.lh
@@ -139,7 +139,7 @@ ServerAlias phpmyadmin.lh *.phpmyadmin.lh
 </VirtualHost>"
 #
     if ! grep -q 'phpmyadmin.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
-        echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
+        echo "$add_to_apache_conf_pma" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
     fi
     if ! grep -q 'phpmyadmin.lh' /etc/hosts ; then
         echo 127.0.0.1 phpmyadmin.lh >> /etc/hosts
@@ -166,14 +166,13 @@ if ! grep -q '127.0.0.1' /etc/hostname ; then
 fi
 #
 printf "%s\n" "" "LAMP are installed." ""
-printf '\n'
-printf "%s\n" "" "You can open: 
-to services management https://localhost:10000" ""
+printf "%s\n" "" "You can open:
+to services management https://localhost:10000"
 if [[ $_replypma =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "to databases management http://phpmyadmin.lh" ""
+    printf "%s\n" "to databases management http://phpmyadmin.lh"
 fi
 if [[ $_replyap =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "to check PHP modules http://phpinfo.lh" ""
+    printf "%s\n" "to check PHP modules http://phpinfo.lh" ""
     pecl version
     printf "%s\n" "" "LAMP configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
