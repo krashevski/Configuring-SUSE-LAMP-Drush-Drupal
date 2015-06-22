@@ -328,11 +328,12 @@ case "$_distrnumber" in
 # Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
     mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
-#   drush vset file_temporary_path /home/${_user}/public_html/${_sitepatch}/tmp
+# String to config tmp directory
+#   echo $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
 #
 # This install Drupal 7 user=admin password=admin
-    drush si standard --account-name=admin --account-pass=admin --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+    drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --account-mail=v.krashevski@gmail.com --yes
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
@@ -502,12 +503,11 @@ systemctl restart mysql.service
 printf "%s\n" "" "Drush status:" ""
 drush status
 #
-printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh.
-To login open http://"${_sitepatch}".lh/user end paste user=admin password=admin." ""
+printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh." ""
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
-printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ~sites/default/files/tmp" ""
+printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ../tmp" ""
 #
-printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh ; drush help' " ""
+printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh ; drush help" ""
 # drush user-login --uri=http://"${_sitepatch}".lh
 #
 exit 0
