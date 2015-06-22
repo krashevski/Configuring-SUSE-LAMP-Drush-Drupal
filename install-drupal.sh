@@ -239,6 +239,7 @@ case "$_distrnumber" in
 # Installation popular Drupal 7 modules
         printf "%s\n" "" "Process of installing Drupal modules..." ""
         drush dl i18n, l10n_update, transliteration
+        chown -Rf ${_user}:${_group} sites/all/modules
         printf "%s\n" "" "Drupal modules are installed." ""
 # Enable popular Drupal modules
         printf "%s\n" "" "Process of enabling Drupal modules..." ""
@@ -347,6 +348,7 @@ case "$_distrnumber" in
     if [[ $_replyseo =~ ^(yes|y) ]]; then
         printf "%s\n" "" "Process of installing popular Drupal modules..." ""
         drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
+        chown -Rf ${_user}:${_group} sites/all/modules
         printf "%s\n" "" "Popular Drupal modules are installed." ""
 #
         printf "%s\n" "" "Process of enabling Drupal modules..." ""
@@ -384,6 +386,7 @@ case "$_distrnumber" in
 # Install popular Drupal 7 modules
         printf "%s\n" "" "Process of installing Drupal modules..." ""
         drush dl i18n, l10n_update, transliteration
+        chown -Rf ${_user}:${_group} sites/all/modules
         printf "%s\n" "" "Drupal modules are installed." ""
 # Enable popular Drupal modules
         printf "%s\n" "" "Process of enabling Drupal modules..." ""
@@ -426,6 +429,7 @@ if [[ $_replysd =~ ^(yes|y) ]]; then
     chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/ses.php
     chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/cfg.php
     drush en -y sypex_dumper
+    chown -Rf ${_user}:${_group} sites/all/modules
     printf "%s\n" "" "Supex Dumper for Drupal are installed." ""
 fi
 #
