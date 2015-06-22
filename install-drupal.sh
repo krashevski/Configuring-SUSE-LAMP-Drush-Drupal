@@ -329,11 +329,11 @@ case "$_distrnumber" in
     mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
 # String to config tmp directory
-#   echo $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
+#   echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
 #
 # This install Drupal 7 user=admin password=admin
-    drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --account-mail=admin@${_sitepatch}.lh --yes
+    drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --account-name=admin --account-pass=admin --site-name=${_sitepatch} --account-mail=admin@${_sitepatch}.lh --yes
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
@@ -507,8 +507,10 @@ printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh." ""
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
 printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ../tmp" ""
 #
-printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh ; drush help" ""
+printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh'; 'drush help'" ""
 #
+# Fixed problem with login user=admin
+# cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
 # drush user-login --uri=http://"${_sitepatch}".lh
 #
 exit 0
