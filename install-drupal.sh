@@ -507,7 +507,7 @@ To login open http://"${_sitepatch}".lh/user end paste user=admin password=admin
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
 printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ~sites/default/files/tmp" ""
 #
-printf "%s\n" "" "Fixing problem with login after installation Drupal web-site" ""
-drush user-login --uri=http://"${_sitepatch}".lh
+printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh ; drush help' " ""
+# drush user-login --uri=http://"${_sitepatch}".lh
 #
 exit 0
