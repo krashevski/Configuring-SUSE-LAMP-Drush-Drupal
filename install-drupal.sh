@@ -5,17 +5,17 @@
 # 19.06.2015
 #
 #----------------------------------------------------
-# This work is licensed under a Creative Commons 
+# This work is licensed under a Creative Commons
 # Attribution-ShareAlike 3.0 Unported License;
-# see http://creativecommons.org/licenses/by-sa/3.0/ 
+# see http://creativecommons.org/licenses/by-sa/3.0/
 # for more information.
-#----------------------------------------------------# 
+#----------------------------------------------------#
 #
-# The full version of all the scripts 
-# in the book 
+# The full version of all the scripts
+# in the book
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
 # Online https://www.ljubljuknigi.ru
-# 
+#
 # This script installs as a Drupal site sitename.lh in directory
 # /public_html/sitename/sitename.lh
 # user default site admin, password admin site
@@ -27,8 +27,8 @@
 # for enabling Apache modules: rewrite, cache, mem_cache
 # apache2 /etc/sysconfig/ root/root rw-r—r--
 #
-# localhost configuration: 
-# localhost.conf /etc/apache2/vhosts.d/ root/root rw-r--r-- 
+# localhost configuration:
+# localhost.conf /etc/apache2/vhosts.d/ root/root rw-r--r--
 #
 # virtual hosts configuration:
 # ip-based_vhosts.conf /etc/apache2/vhosts.d/ root/root rw-r--r--
@@ -115,7 +115,8 @@ fi
 #
 _user=$user
 #
-_group='users'
+# Web server process may run with group permissions of the group "www", defining groups
+_group='www'
 #
 # List of Drupal distributions
 #
@@ -135,7 +136,7 @@ done
 printf '\n'
 echo -n "Enter the number of available distribution: "
 read distrnumber
-_distrname=${distr[$distrnumber]} 
+_distrname=${distr[$distrnumber]}
 echo -n "You have chosen the distribution" ${_distrname}"." ""
 read -p "Do you want to continue? (y/n): " replydistr
 _replydistr=${replydistr,,} # # to lower case
@@ -153,11 +154,11 @@ _sitepatch=$sitepatch
 printf "%s\n" "" "If you are tuned security MariaDB, you can create the database:" ""
 #
 echo -n "Enter the name of the database: "
-read dbname 
+read dbname
 _dbname=$dbname # = 'drupal'
 #
 echo -n "Enter the database user: "
-read dbuser 
+read dbuser
 _dbuser=$dbuser # = 'root'
 #
 stty -echo
@@ -166,9 +167,12 @@ stty echo
 printf '\n'
 _dbpass=$dbpass # = 'rootpassword'
 #
-# Creating a database
-echo 'CREATE DATABASE ${_dbname};' | mysql -u ${_dbuser} -p${_dbpass} -e "create database ${_dbname}; GRANT ALL PRIVILEGES ON ${_dbname}.* TO ${_dbuser}@127.0.0.1 IDENTIFIED BY '${_dbpass}'"
-printf "%s\n" "" "The database was created." ""
+# To automatic install Drupal
+printf "%s\n" "" "Drupal installation process..." ""
+#
+# Создание базы данных
+# drush sql-create --db-su=${_dbuser} --db-su-pw=${_dbpass} --db-url="mysql://${_dbuser}:${_dbpass}@localhost/${_dbname}"
+# printf "%s\n" "" "База данных создана." ""
 #
 # Creating a web server configuration
 add_to_apache_conf="
@@ -205,23 +209,28 @@ case "$_distrnumber" in
 '9')
     printf "%s\n" "" "Process installation Pushtape Music -  for musician bands, and record labels websites..." ""
     drush dl pushtape --drupal-project-rename=${_sitepatch}.lh
+#
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chmod a+w sites/default
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chmod -Rf 770 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     cp sites/default/default.settings.php sites/default/settings.php
-    chmod a+w sites/default/settings.php
-    mkdir -p sites/default/files
-    chmod -R ugo=rwx sites/default/files
-# Increase the upload max filesize 
+    chown ${_user}:${_group} sites/default/settings.php
+    chmod 660 sites/default/settings.php
+#
+# Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
+    mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
+#   drush vset file_temporary_path /home/${_user}/public_html/${_sitepatch}/tmp
+    chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
+#
+# Increase the upload max filesize
     sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
-    drush si pushtape --db-url=mysql://${_dbuser}:${_dbpass}@127.0.0.1/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
-#    
-    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    drush si pushtape --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #
-    chmod ugo-w sites/default/settings.php
-    chmod ugo-w sites/default
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chown -Rf ${_user}:${_group} sites/default/files
 #
 # Installation Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
@@ -252,22 +261,28 @@ case "$_distrnumber" in
 '13')
     printf "%s\n" "" "Process installation Conference Organizing Distribution (COD) - conference website with features..." ""
     drush dl cod --drupal-project-rename=${_sitepatch}.lh
+#
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chmod a+w sites/default
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chmod -Rf 770 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     cp sites/default/default.settings.php sites/default/settings.php
-    chmod a+w sites/default/settings.php
-    mkdir -p sites/default/files
-    chmod -R ugo=rwx sites/default/files
-# Increase the allowable PHP execution time 
+    chown ${_user}:${_group} sites/default/settings.php
+    chmod 660 sites/default/settings.php
+#
+# Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
+    mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
+#   drush vset file_temporary_path /home/${_user}/public_html/${_sitepatch}/tmp
+    chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
+#
+# Increase the allowable PHP execution time
     sed -i 's/max_execution_time.*/max_execution_time = 120/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
-    drush si cod --db-url=mysql://${_dbuser}:${_dbpass}@127.0.0.1/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
-#    
-    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
+    drush si cod --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+#
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chmod ugo-w sites/default/settings.php
-    chmod ugo-w sites/default
+    chown -Rf ${_user}:${_group} sites/default/files
 #
 # Install Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
@@ -295,7 +310,7 @@ case "$_distrnumber" in
         printf "%s\n" "" "Drupal translation are installed." ""
     fi
     ;;
-'16') 
+'16')
     printf "%s\n" "" "Process installation Drupal core..." ""
     drush dl drupal --drupal-project-rename=${_sitepatch}.lh
 #
@@ -303,51 +318,49 @@ case "$_distrnumber" in
 #
 # This install to Drupal 7 core
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chmod a+w sites/default
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chmod -Rf 770 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     cp sites/default/default.settings.php sites/default/settings.php
-    chmod a+w sites/default/settings.php
-    mkdir -p sites/default/files
-    mkdir -p sites/default/files/tmp
-    chmod -R ugo=rwx sites/default/files
+    chown ${_user}:${_group} sites/default/settings.php
+    chmod 660 sites/default/settings.php
+#
+# Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
+    mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
+#   drush vset file_temporary_path /home/${_user}/public_html/${_sitepatch}/tmp
+    chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
 #
 # This install Drupal 7 user=admin password=admin
-    drush si standard --account-name=admin --account-pass=admin --db-url=mysql://${_dbuser}:${_dbpass}@127.0.0.1/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+    drush si standard --account-name=admin --account-pass=admin --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #
-    mkdir -p /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
-    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chown -Rf ${_user}:${_group} sites/default/files
+# Security settings Drupal site
+#    chmod 640 sites/default/settings.php
+#    chmod 640 sites/default
+#
     printf "%s\n" "" "Drupal distribution was installed in a directory /home/"${_user}"/public_html/"${_sitepatch}"/"${_sitepatch}".lh." ""
 #
-# Security settings Drupal site
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-#
-    chmod ugo-w sites/default/settings.php
-    chmod ugo-w sites/default
-#   
 # Install popular Drupal 7 modules
-    read -p "Do you want to install opular Drupal SEO modules? (y/n): " replyseo
+    read -p "Do you want to install popular Drupal modules? (y/n): " replyseo
     _replyseo=${replyseo,,} # # to lower case
     if [[ $_replyseo =~ ^(yes|y) ]]; then
-        printf "%s\n" "" "Process of installing popular Drupal SEO modules..." ""
+        printf "%s\n" "" "Process of installing popular Drupal modules..." ""
         drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
-        printf "%s\n" "" "Popular Drupal SEO modules are installed." ""
-#  
+        printf "%s\n" "" "Popular Drupal modules are installed." ""
+#
         printf "%s\n" "" "Process of enabling Drupal modules..." ""
 # Enable popular Drupal modules
         drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
-        printf "%s\n" "" "Popular Drupal SEO modules are enabled." ""
-    fi
-# Disconnecting module Drupal shorcut
-#   drush dis toolbar shorcut -y
-#
-# Additional libraries
-    printf "%s\n" "" "Process of installing additional libraries Drupal..." ""
-    mkdir -p /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
+        # Additional libraries
+        printf "%s\n" "" "Process of installing additional libraries Drupal..." ""
+        mkdir -p /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
 #
 # To include a code library external to the Drupal project
 # http://drupal.org/packaging-whitelist
 # Install Colobox librarie
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
-    drush colorbox-plugin
+        cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
+        drush colorbox-plugin
 #
 # Install Colobox librarie if not work drush command
 #   wget --no-check-certificate https://github.com/jackmoore/colorbox/tarball/master
@@ -355,7 +368,12 @@ case "$_distrnumber" in
 #   cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
 #   rename colorbox* colorbox colorbox*
 
-    printf "%s\n" "" "The end of the installation of additional libraries." ""
+        printf "%s\n" "" "The end of the installation of additional libraries." ""
+#
+        printf "%s\n" "" "Popular Drupal modules are enabled." ""
+    fi
+# Disconnecting module Drupal shorcut
+#   drush dis toolbar shorcut -y
 #
     printf '\n'
 #
@@ -390,7 +408,8 @@ case "$_distrnumber" in
 esac
 #
 # Install Supex Dumper archiving database
-read -p "Do you want to install Supex Dumper archiving database? (y/n): " replysd
+read -p "Drush makes it easy to quickly back up and restore Drupal databases.
+Do you want to install Supex Dumper tools archiving database? (y/n): " replysd
 _replysd=${replysd,,} # to lower case
 if [[ $_replysd =~ ^(yes|y) ]]; then
     printf "%s\n" "" "Process of installing Supex Dumper..." ""
