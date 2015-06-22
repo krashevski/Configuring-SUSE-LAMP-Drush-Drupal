@@ -333,7 +333,7 @@ case "$_distrnumber" in
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
 #
 # This install Drupal 7 user=admin password=admin
-    drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --account-mail=v.krashevski@gmail.com --yes
+    drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --account-mail=admin@${_sitepatch}.lh --yes
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
@@ -508,6 +508,7 @@ printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh." ""
 printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ../tmp" ""
 #
 printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh ; drush help" ""
+#
 # drush user-login --uri=http://"${_sitepatch}".lh
 #
 exit 0
