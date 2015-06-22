@@ -68,6 +68,12 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 # PHP configuration settings https://www.drupal.org/requirements/php
     printf "%s\n" "" "PHP installation process..." ""
     zypper install php5 php5-gd php-db php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-fileinfo php5-xmlwriter php5-zip php5-ftp php5-pear php5-devel
+# Increase PHP memory limit
+    sed -i 's/memory_limit.*/memory_limit = 64M/g' /etc/php5/apache2/php.ini
+#
+# Security PHP configuration https://www.drupal.org/requirements/php
+    sed -i 's/allow_url_fopen.*/allow_url_fopen = off/g' /etc/php5/apache2/php.ini
+#
     printf "%s\n" "" "PHP are installed." ""
 #
 # Installation PECL
@@ -92,12 +98,6 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
         zypper remove php5-dev
         printf "%s\n" "" "PECL and uploadprogress are installed." ""
     fi
-#
-# Increase PHP memory limit
-    sed -i 's/memory_limit.*/memory_limit = 64M/g' /etc/php5/apache2/php.ini
-#
-# Security PHP configuration https://www.drupal.org/requirements/php
-    sed -i 's/allow_url_fopen.*/allow_url_fopen = off/g' /etc/php5/apache2/php.ini
 #
 # Installation PECL memcache https://www.thefanclub.co.za/how-to/how-install-memcached-opensuse-use-drupal
     read -p "Do you want to install memcache on this machine? (y/n): " replymem
