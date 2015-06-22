@@ -84,6 +84,10 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
     zypper remove php5-dev
 #
+# Installation PECL memcache
+    pecl install memcache
+#   ...
+#
 # Make phpinfo file
     mkdir -p /srv/www/htdocs/phpinfo
     touch /srv/www/htdocs/phpinfo/phpinfo.php
