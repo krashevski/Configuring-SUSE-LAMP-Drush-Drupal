@@ -65,7 +65,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     zypper addrepo http://download.opensuse.org/repositories/server:/php/openSUSE_$version/ server_php
     zypper refresh
 #
-    zypper install php5 php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-xmlwriter php5-zip php5-pear php5-devel
+    zypper install php5 php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-xmlwriter php5-zip php5-ftp php5-pear php5-devel
 #
 # Installation PECL
 # Channels update
