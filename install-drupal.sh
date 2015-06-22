@@ -116,7 +116,7 @@ fi
 _user=$user
 #
 # Web server process may run with group permissions of the group "www", defining groups
-_group='www'
+_group='wwwrun'
 #
 # List of Drupal distributions
 #
