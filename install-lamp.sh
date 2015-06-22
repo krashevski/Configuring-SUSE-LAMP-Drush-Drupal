@@ -1,8 +1,7 @@
 #!/bin/bash
 # Script to automatic install or reinstall LAMP
 #
-# Copyright script by Vladislav Krashevskij
-# (v.krashevski#gmail.com)
+# Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 19.06.2015
 #
 #----------------------------------------------------
@@ -14,15 +13,13 @@
 #
 # The full version of all the scripts
 # in the book
-# Настройка LAMP (Linux+Apache+MySQL+PHP) под
-# openSUSE для CMS Drupal
+# Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
 # Online https://www.ljubljuknigi.ru
 #
 # Check user
 curuser=`whoami`
 if test $curuser != "root"; then
-  echo 'Run the script as user root with sudo \
-command.'
+  echo 'Run the script as user root with sudo command.'
   exit
 fi
 #
@@ -31,20 +28,16 @@ printf "%s\n" "" "LAMP installation process..." ""
 yast -i zypper
 printf "%s\n" "" "zypper are installed.." ""
 #
-read -p "Do you want to install MariaDB sql server \
-on this machine? (y/n): " \
-replymariadb
+read -p "Do you want to install MariaDB sql server on this machine? (y/n): " replymariadb
 _replymariadb=${replymariadb,,} # # to lower case
 if [[ $_replymariadb =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "MariaDB databases \
-installation process..." ""
+    printf "%s\n" "" "MariaDB databases installation process..." ""
 #
     zypper in mariadb mariadb-tools
     systemctl enable mysql.service
     systemctl start mysql.service
 # MySQL tuning
-    printf "%s\n" "" "MySQL secure installation \
-process..." ""
+    printf "%s\n" "" "MySQL secure installation process..." ""
     mysql_secure_installation
 #
     systemctl restart mysql.service
@@ -52,38 +45,27 @@ process..." ""
     printf "%s\n" "" "MariaDB are installed." ""
 fi
 #
-read -p "Do you want to install Apache web-service \
-and PHP programming \
-language for CMS on this machine? (y/n): " replyap
+read -p "Do you want to install Apache web-service and PHP programming language for CMS on this machine? (y/n): " replyap
 _replyap=${replyap,,} # # to lower case
 if [[ $_replyap =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "Apache web-service and PHP \
-installation process..." ""
+    printf "%s\n" "" "Apache web-service and PHP installation process..." ""
 #
     zypper install apache2
     systemctl enable apache2.service
     systemctl start apache2.service
     printf "%s\n" "" "Apache 2 are installed." ""
 #
-    zypper install apache2-mod_php5 \
-apache2-mod_memcache
+    zypper install apache2-mod_php5 apache2-mod_memcache
     a2enmod php5 rewrite cache memcache
 #   systemctl restart apache2.service
-    printf "%s\n" "" "Modules Apache 2 are \
-installed." ""
+    printf "%s\n" "" "Modules Apache 2 are installed." ""
 # Check verison OpenSUSE
-    version=`sed -n -e 's/^VERSION = //p' \
-/etc/SuSE-release`
+    version=`sed -n -e 's/^VERSION = //p' /etc/SuSE-release`
 #
-    zypper addrepo \
-http://download.opensuse.org/repositories/server:\
-/php/openSUSE_$version/ \
-server_php
+    zypper addrepo http://download.opensuse.org/repositories/server:/php/openSUSE_$version/ server_php
     zypper refresh
 #
-    zypper install php5 php5-mysql php5-bcmath \
-php5-ctype php5-dom php5-json \
-php5-xmlwriter php5-zip php5-pear php5-devel
+    zypper install php5 php5-gd php-db php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-fileinfo php5-xmlwriter php5-zip php5-ftp php5-pear php5-devel
 #
 # Installation PECL
 # Channels update
@@ -94,10 +76,8 @@ php5-xmlwriter php5-zip php5-pear php5-devel
 #
 # A configuration of the php.ini file(s)
     mkdir -p /usr/lib/php5/extensions
-    echo -e "extension=uploadprogress.so" > \
-/usr/lib/php5/extensions/uploadprogress.ini
-    echo -e "extension=uploadprogress.so" > \
-/etc/php5/conf.d/uploadprogress.ini
+    echo -e "extension=uploadprogress.so" > /usr/lib/php5/extensions/uploadprogress.ini
+    echo -e "extension=uploadprogress.so" > /etc/php5/conf.d/uploadprogress.ini
 # Test PHP interpreter is reflecting the changes
 # zypper install htop
 # htop
@@ -107,19 +87,21 @@ php5-xmlwriter php5-zip php5-pear php5-devel
 # Increase PHP memory limit
     sed -i 's/memory_limit.*/memory_limit = 64M/g' /etc/php5/apache2/php.ini
 #
+# Installation PECL memcache
+    pecl install memcache
+#   ...
+#
 # Make phpinfo file
     mkdir -p /srv/www/htdocs/phpinfo
     touch /srv/www/htdocs/phpinfo/phpinfo.php
     add_to_phpinfo="
     <?php phpinfo();?>"
-    echo "$add_to_phpinfo" >> \
-/srv/www/htdocs/phpinfo/phpinfo.php
+    echo "$add_to_phpinfo" >> /srv/www/htdocs/phpinfo/phpinfo.php
 #
 #   systemctl restart apache2.service
     printf "%s\n" "" "PHP are installed." ""
     #
-#   printf "%s\n" "" "Apache web-service \
-configuration process..." ""
+#   printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
     add_to_apache_conf_pi="
 <VirtualHost *>
@@ -133,34 +115,24 @@ ServerAlias phpinfo.lh *.phpinfo.lh
 </Directory>
 </VirtualHost>"
 #
-    if ! grep -q 'phpinfo.lh' \
-/etc/apache2/vhosts.d/ip-based_vhosts.conf ; \
-then
-        echo "$add_to_apache_conf_pi" >> \
-/etc/apache2/vhosts.d/ip-based_vhosts.conf
+    if ! grep -q 'phpinfo.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
+        echo "$add_to_apache_conf_pi" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
     fi
     if ! grep -q 'phpinfo.lh' /etc/hosts ; then
         echo 127.0.0.1 localhost >> /etc/hosts
         echo 127.0.0.1 phpinfo.lh >> /etc/hosts
     fi
     systemctl restart apache2.service
-    printf "%s\n" "" "Apache configuration is \
-created. Please, open phpinfo at \
-http://phpinfo.lh." ""
-    printf "%s\n" "" "Apache web-service and PHP \
-are installed." ""
+    printf "%s\n" "" "Apache configuration is created. Please, open phpinfo at http://phpinfo.lh." ""
+    printf "%s\n" "" "Apache web-service and PHP are installed." ""
 fi
 #
-read -p "Do you want to install phpMyAdmin to \
-databases management on this \
-machine? (y/n): " replypma
+read -p "Do you want to install phpMyAdmin to databases management on this machine? (y/n): " replypma
 _replypma=${replypma,,} # # to lower case
 if [[ $_replypma =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "phpMyAdmin installation \
-process..." ""
+    printf "%s\n" "" "phpMyAdmin installation process..." ""
     zypper install phpmyadmin
-#   printf "%s\n" "" "Apache web-service \
-configuration process..." ""
+#   printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
     add_to_apache_conf_pma="
 <VirtualHost *>
@@ -173,37 +145,27 @@ ServerAlias phpmyadmin.lh *.phpmyadmin.lh
 </Directory>
 </VirtualHost>"
 #
-    if ! grep -q 'phpmyadmin.lh' \
-/etc/apache2/vhosts.d/ip-based_vhosts.conf ; \
-then
-        echo "$add_to_apache_conf_pma" >> \
-/etc/apache2/vhosts.d/ip-based_vhosts.conf
+    if ! grep -q 'phpmyadmin.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
+        echo "$add_to_apache_conf_pma" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
     fi
     if ! grep -q 'phpmyadmin.lh' /etc/hosts ; then
         echo 127.0.0.1 phpmyadmin.lh >> /etc/hosts
-        echo 127.0.0.1 www.phpmyadmin.lh >> \
-/etc/hosts
+        echo 127.0.0.1 www.phpmyadmin.lh >> /etc/hosts
     fi
     systemctl restart apache2.service
 #
     zypper in memcached
     printf "%s\n" "" "Memcached are installed." ""
 #
-    printf "%s\n" "" "Apache configuration is \
-created. Please, open phpMyAdmin \
-at http://phpmyadmin.lh." ""
+    printf "%s\n" "" "Apache configuration is created. Please, open phpMyAdmin at http://phpmyadmin.lh." ""
     printf "%s\n" "" "phpMyAdmin are installed." ""
 fi
 #
 zypper install webmin
-printf "%s\n" "" "Webmin are installed. Please, \
-open Webmin at \
-https://localhost:10000." ""
+printf "%s\n" "" "Webmin are installed. Please, open Webmin at https://localhost:10000." ""
 #
 if ! grep -q '127.0.0.1' /etc/hostname ; then
-    echo -n "Enter Fully Qualified Domain Name of \
-the machine, for example \
-server.com: "
+    echo -n "Enter Fully Qualified Domain Name of the machine, for example server.com: "
     read fqdn
     add_to_hostname="$fqdn
 127.0.0.1 $fqdn"
@@ -214,15 +176,12 @@ printf "%s\n" "" "LAMP are installed." ""
 printf "%s\n" "" "You can open:
 to services management https://localhost:10000"
 if [[ $_replypma =~ ^(yes|y) ]]; then
-    printf "%s\n" "to databases management \
-http://phpmyadmin.lh"
+    printf "%s\n" "to databases management http://phpmyadmin.lh"
 fi
 if [[ $_replyap =~ ^(yes|y) ]]; then
-    printf "%s\n" "to check PHP modules \
-http://phpinfo.lh" ""
+    printf "%s\n" "to check PHP modules http://phpinfo.lh" ""
     pecl version
-    printf "%s\n" "" "LAMP configuration files to \
-check:
+    printf "%s\n" "" "LAMP configuration files to check:
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
 /etc/hostname" ""
