@@ -65,24 +65,33 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     zypper addrepo http://download.opensuse.org/repositories/server:/php/openSUSE_$version/ server_php
     zypper refresh
 #
+# PHP configuration settings https://www.drupal.org/requirements/php
+    printf "%s\n" "" "PHP installation process..." ""
     zypper install php5 php5-gd php-db php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-fileinfo php5-xmlwriter php5-zip php5-ftp php5-pear php5-devel
+    printf "%s\n" "" "PHP are installed." ""
 #
 # Installation PECL
+    read -p "Do you want to install PECL and uploadprogress on this machine? (y/n): " replyul
+    _replyul=${replyul,,} # # to lower case
+    if [[ $_replyul =~ ^(yes|y) ]]; then
+        printf "%s\n" "" "PECL and uploadprogress installation process..." ""
 # Channels update
-    pecl channel-update pecl.php.net
+        pecl channel-update pecl.php.net
 # Installation PECL uploadprogress and its library
-    zypper install gcc autoconf make
-    pecl install uploadprogress
+        zypper install gcc autoconf make
+        pecl install uploadprogress
 #
 # A configuration of the php.ini file(s)
-    mkdir -p /usr/lib/php5/extensions
-    echo -e "extension=uploadprogress.so" > /usr/lib/php5/extensions/uploadprogress.ini
-    echo -e "extension=uploadprogress.so" > /etc/php5/conf.d/uploadprogress.ini
+        mkdir -p /usr/lib/php5/extensions
+        echo -e "extension=uploadprogress.so" > /usr/lib/php5/extensions/uploadprogress.ini
+        echo -e "extension=uploadprogress.so" > /etc/php5/conf.d/uploadprogress.ini
 # Test PHP interpreter is reflecting the changes
 # zypper install htop
 # htop
 #
-    zypper remove php5-dev
+        zypper remove php5-dev
+        printf "%s\n" "" "PECL and uploadprogress are installed." ""
+    fi
 #
 # Increase PHP memory limit
     sed -i 's/memory_limit.*/memory_limit = 64M/g' /etc/php5/apache2/php.ini
@@ -90,9 +99,16 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 # Security PHP configuration https://www.drupal.org/requirements/php
     sed -i 's/allow_url_fopen.*/allow_url_fopen = off/g' /etc/php5/apache2/php.ini
 #
-# Installation PECL memcache
-    pecl install memcache
+# Installation PECL memcache https://www.thefanclub.co.za/how-to/how-install-memcached-opensuse-use-drupal
+    read -p "Do you want to install memcache on this machine? (y/n): " replymem
+    _replymem=${replymem,,} # # to lower case
+    if [[ $_replymem =~ ^(yes|y) ]]; then
+        printf "%s\n" "" "memcache installation process..." ""
+        pecl install memcache
+        zypper in memcached
 #   ...
+        printf "%s\n" "" "Memcache are installed." ""
+    fi
 #
 # Make phpinfo file
     mkdir -p /srv/www/htdocs/phpinfo
@@ -102,9 +118,8 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     echo "$add_to_phpinfo" >> /srv/www/htdocs/phpinfo/phpinfo.php
 #
 #   systemctl restart apache2.service
-    printf "%s\n" "" "PHP are installed." ""
-    #
-#   printf "%s\n" "" "Apache web-service configuration process..." ""
+#
+    printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
     add_to_apache_conf_pi="
 <VirtualHost *>
@@ -127,7 +142,6 @@ ServerAlias phpinfo.lh *.phpinfo.lh
     fi
     systemctl restart apache2.service
     printf "%s\n" "" "Apache configuration is created. Please, open phpinfo at http://phpinfo.lh." ""
-    printf "%s\n" "" "Apache web-service and PHP are installed." ""
 fi
 #
 read -p "Do you want to install phpMyAdmin to databases management on this machine? (y/n): " replypma
@@ -156,9 +170,6 @@ ServerAlias phpmyadmin.lh *.phpmyadmin.lh
         echo 127.0.0.1 www.phpmyadmin.lh >> /etc/hosts
     fi
     systemctl restart apache2.service
-#
-    zypper in memcached
-    printf "%s\n" "" "Memcached are installed." ""
 #
     printf "%s\n" "" "Apache configuration is created. Please, open phpMyAdmin at http://phpmyadmin.lh." ""
     printf "%s\n" "" "phpMyAdmin are installed." ""
