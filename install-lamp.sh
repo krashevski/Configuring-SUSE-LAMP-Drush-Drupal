@@ -87,6 +87,9 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 # Increase PHP memory limit
     sed -i 's/memory_limit.*/memory_limit = 64M/g' /etc/php5/apache2/php.ini
 #
+# Security PHP configuration https://www.drupal.org/requirements/php
+    sed -i 's/allow_url_fopen.*/allow_url_fopen = off/g' /etc/php5/apache2/php.ini
+#
 # Installation PECL memcache
     pecl install memcache
 #   ...
