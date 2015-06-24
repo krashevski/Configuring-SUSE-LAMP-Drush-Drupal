@@ -19,10 +19,10 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
     _replymod=${replymod,,} # # to lower case
     if [[ $_replymod =~ ^(yes|y) ]]; then
         printf "%s\n" "" "Process of installing popular Drupal SEO modules..." ""
-        drush dl pathauto, globalredirect, page_title, xmlsitemap, search404
+        drush dl transliteration, pathauto, globalredirect, page_title, xmlsitemap, search404
         chown -Rf ${_user}:${_group} sites/all/modules
 # Enabling popular Drupal SEO modules
-        drush en -y pathauto, globalredirect, page_title, xmlsitemap, search404
+        drush en -y transliteration, pathauto, globalredirect, page_title, xmlsitemap, search404
 #
 # Disconnecting module Drupal shorcut
 #   drush dis toolbar shorcut -y
