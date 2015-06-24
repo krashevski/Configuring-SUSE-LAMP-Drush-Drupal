@@ -11,7 +11,7 @@ Scripts after installation Drupal from browser from the directory of site
 3. install-libs.sh;
 4. after-install.sh.
 
-Scripts to backup web-server
+Scripts to backup full web-server
 1. lamp-save-dumps.sh;
 2. lamp-restore-data.sh.
 
