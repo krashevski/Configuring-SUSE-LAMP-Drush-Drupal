@@ -10,28 +10,7 @@ printf "%s\n" "" "Run the script from the  directory of site." ""
 read -p "Do you want to continue? (y/n): " replydir
 _replydir=${replydir,,} # # to lower case
 if [[ $_replydir =~ ^(yes|y) ]]; then
-# Defining user
-    printf "%s\n" "" "The list of people whose profiles can be installed Drupal:" ""
-# List only usernames
-# Minimum and maximum user IDs from /etc/login.defs
-    UID_MIN=$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)
-    UID_MAX=$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)
-    awk -F: -v min=$UID_MIN -v max=$UID_MAX '$3 >= min && $3 <= max{print $1}' /etc/passwd
-#
-    printf '\n'
-    echo -n "Enter the user name of the system: "
-    read user
-#
-    _users=`awk -F: -v min=$UID_MIN -v max=$UID_MAX '$3 >= min && $3 <= max{print $1}' /etc/passwd`
-#
-    if `echo ${_users[@]} | grep -q "$user"` ; then
-        echo 'Username' $user 'acceptable.'
-    else
-        echo 'Error Username' $user 'unacceptable.'
-        exit
-    fi
-#
-    _user=$user
+    _user=`find $directoryname -maxdepth 0 -printf '%u\n'`
 #
 # Web server process may run with group permissions of the group "www", defining groups
     _group='www'
@@ -67,4 +46,3 @@ printf "%s\n" "" "Drupal translation are installed." ""
 fi
 #
 exit 0
-
