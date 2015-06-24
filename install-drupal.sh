@@ -225,25 +225,17 @@ case "$_distrnumber" in
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
 #
-# Increase the upload max filesize
+# Increase the upload max filesize for Pushtape Music
     sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
-# Создание базы данных
+# Creating a database
     drush sql-create --db-su=${_dbuser} --db-su-pw=${_dbpass} --db-url="mysql://${_dbuser}:${_dbpass}@localhost/${_dbname}" --yes
     printf "%s\n" "" "The database was created:" ${_dbname}"." ""
 #
-# Install Drupal translation
-#    read -p "Do you want to install Drupal translation? (y/n): " replytranslation
-#    _replytranslation=${replytranslation,,} # # to lower case
-#    if [[ $_replytranslation =~ ^(yes|y) ]]; then
-#        echo -n "Enter an identifier language, eg ru: "
-#        read _lang
-#    else
-#       _lang='en'
-#    fi
-#    drush si pushtape expert --locale=${_lang} --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+#   drush si pushtape expert --locale=${_lang} --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #
+# Open site in browser to continue the installation
     firefox -new-tab http://"${_sitepatch}".lh
     ;;
 '16')
@@ -263,10 +255,7 @@ case "$_distrnumber" in
 # Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
     mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
-# String to config tmp directory
-#   echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
-    drush --backup-location=/home/${_user}/public_html/${_sitepatch}/tmp
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
@@ -344,6 +333,10 @@ case "$_distrnumber" in
         drush l10n-update -y
         printf "%s\n" "" "Drupal translation are installed." ""
     fi
+#
+# To set temporary file directory path
+    drush --backup-location=/home/${_user}/public_html/${_sitepatch}/tmp
+#
     printf "%s\n" "" "If used drush site-install, it may be a problem with login in the site." ""
     ;;
 *)  echo "$_distrnubmer" is not processed
@@ -443,11 +436,11 @@ printf "%s\n" "" "Drush status:" ""
 drush status
 #
 printf "%s\n" "" "Please, open Drupal site http://'${_sitepatch}'.lh. Database name: '${_dbname}'." ""
-# printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
+# printf "%s\n" "" "Drupal was install in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
 #
 printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh'; 'drush help'" ""
 #
-# Fixed problem with login user=admin
+# To fixed problem with login user=admin
 # cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
 # drush user-login --uri=http://"${_sitepatch}".lh
 #
