@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to remove Composer and Drush
+# Script to remove Composer and Drush for development installation Drupal.
 #
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
