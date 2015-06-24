@@ -45,3 +45,4 @@ printf "%s\n" "" "Drupal translation are installed." ""
 #
 fi
 #
+exit 0
