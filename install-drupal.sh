@@ -411,9 +411,9 @@ case "$_distrnumber" in
     ;;
 esac
 #
-# Install Supex Dumper archiving database
+# Install Supex Dumper backup database
 read -p "Drush makes it easy to quickly back up and restore Drupal databases.
-Do you want to install Supex Dumper tools archiving database? (y/n): " replysd
+Do you want to install Supex Dumper backup database for drupal 7? (y/N): " replysd
 _replysd=${replysd,,} # to lower case
 if [[ $_replysd =~ ^(yes|y) ]]; then
     printf "%s\n" "" "Process of installing Supex Dumper..." ""
