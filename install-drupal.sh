@@ -229,6 +229,9 @@ case "$_distrnumber" in
     sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
+# Increase the allowable PHP execution time if install "Conference Organizing Distribution (COD) - conference website with features" distributive
+#    sed -i 's/max_execution_time.*/max_execution_time = 120/g' /etc/php5/apache2/php.ini
+#
 # Creating a database
     drush sql-create --db-su=${_dbuser} --db-su-pw=${_dbpass} --db-url="mysql://${_dbuser}:${_dbpass}@localhost/${_dbname}" --yes
     printf "%s\n" "" "The database was created:" ${_dbname}"." ""
