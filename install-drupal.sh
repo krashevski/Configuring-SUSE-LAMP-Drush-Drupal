@@ -1,3 +1,4 @@
+
 #!/bin/bash
 # Script automatic install Drupal
 #
@@ -276,9 +277,9 @@ case "$_distrnumber" in
     printf "%s\n" "" "Drupal distribution was installed in a directory /home/"${_user}"/public_html/"${_sitepatch}"/"${_sitepatch}".lh." ""
 #
 # Install popular Drupal 7 modules
-    read -p "Do you want to install popular Drupal modules? (y/n): " replyseo
-    _replyseo=${replyseo,,} # # to lower case
-    if [[ $_replyseo =~ ^(yes|y) ]]; then
+    read -p "Do you want to install popular Drupal modules? (y/n): " replymod
+    _replymod=${replymod,,} # # to lower case
+    if [[ $_replymod =~ ^(yes|y) ]]; then
         printf "%s\n" "" "Process of installing popular Drupal modules..." ""
         drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
         chown -Rf ${_user}:${_group} sites/all/modules
@@ -310,28 +311,28 @@ case "$_distrnumber" in
 # Disconnecting module Drupal shorcut
 #   drush dis toolbar shorcut -y
 #
-# Install Drupal translation
+# Installation Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
     _replytranslation=${replytranslation,,} # # to lower case
     if [[ $_replytranslation =~ ^(yes|y) ]]; then
-# Install popular Drupal 7 modules
+# Installation Drupal modules
         printf "%s\n" "" "Process of installing Drupal modules..." ""
         drush dl i18n, l10n_update, transliteration
         chown -Rf ${_user}:${_group} sites/all/modules
         printf "%s\n" "" "Drupal modules are installed." ""
-# Enable popular Drupal modules
+# Enable Drupal modules
         printf "%s\n" "" "Process of enabling Drupal modules..." ""
         drush en -y i18n, l10n_update, transliteration
         printf "%s\n" "" "Drupal modules are enabled." ""
 # Localization Drupal russian language
-        printf "%s\n" "" "Install Drupal localization..." ""
+        printf "%s\n" "" "Installation Drupal localization..." ""
         drush dl drush_language -y
         echo -n "Enter an identifier language, eg ru: "
         read lang
         drush language-add $lang && drush language-enable $_
         drush language-default $lang
 # Download translation files
-        printf "%s\n" "" "Instalation Drupal translation files..." ""
+        printf "%s\n" "" "Installation Drupal translation files..." ""
         drush l10n-update-refresh -y
         drush l10n-update -y
         printf "%s\n" "" "Drupal translation are installed." ""
