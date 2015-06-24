@@ -2,7 +2,7 @@
 # Script automatic install Drupal
 #
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
-# 19.06.2015
+# 24.06.2015
 #
 #----------------------------------------------------
 # This work is licensed under a Creative Commons
