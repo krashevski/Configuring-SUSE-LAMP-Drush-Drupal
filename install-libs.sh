@@ -9,21 +9,21 @@ printf "%s\n" "" "Run the script from the  directory of site." ""
 read -p "Do you want to continue? (y/n): " replydir
 _replydir=${replydir,,} # # to lower case
 if [[ $_replydir =~ ^(yes|y) ]]; then
-     _user=`find $directoryname -maxdepth 0 -printf '%u\n'`
+    _user=`find $directoryname -maxdepth 0 -printf '%u\n'`
 #
 # Web server process may run with group permissions of the group "www", defining groups
     _group='www'
 #
-# Install popular Drupal 7 modules
-    read -p "Do you want to install Colobox librarie for Drupal? (y/n): " replymod
-    _replymod=${replymod,,} # # to lower case
-    if [[ $_replymod =~ ^(yes|y) ]]; then
-        printf "%s\n" "" "Process of installing popular Drupal modules..." ""
+# Install libraries for Drupal
+    read -p "Do you want to install Colobox librarie for Drupal? (y/n): " replylibs
+    _replylibs=${replylibs,,} # # to lower case
+    if [[ $_replylibs =~ ^(yes|y) ]]; then
+        printf "%s\n" "" "Process of installing Drupal modules..." ""
         drush dl colorbox, jquery_update
         chown -Rf ${_user}:${_group} sites/all/modules
 # Enabling popular Drupal modules
         drush en -y colorbox, jquery_update
-        printf "%s\n" "" "Popular Drupal modules are installed." ""
+        printf "%s\n" "" "Drupal modules are installed." ""
 # Additional libraries
         printf "%s\n" "" "Process of installing Colobox librarie for Drupal..." ""
         mkdir -p sites/all/libraries
@@ -40,10 +40,6 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
 #   rename colorbox* colorbox colorbox*
 #
         printf "%s\n" "" "Colobox librarie for Drupal are installed." ""
-#
-# Disconnecting module Drupal shorcut
-#   drush dis toolbar shorcut -y
-#
     fi
 #
 fi
