@@ -1,6 +1,5 @@
-
 #!/bin/bash
-# Script automatic install Drupal
+# Script to automatic install Drupal
 #
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
@@ -277,41 +276,6 @@ case "$_distrnumber" in
 #
     printf "%s\n" "" "Drupal distribution was installed in a directory /home/"${_user}"/public_html/"${_sitepatch}"/"${_sitepatch}".lh." ""
 #
-# Install popular Drupal 7 modules
-    read -p "Do you want to install popular Drupal modules? (y/n): " replymod
-    _replymod=${replymod,,} # # to lower case
-    if [[ $_replymod =~ ^(yes|y) ]]; then
-        printf "%s\n" "" "Process of installing popular Drupal modules..." ""
-        drush dl admin_menu, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, entity, file_entity, search404
-        chown -Rf ${_user}:${_group} sites/all/modules
-        printf "%s\n" "" "Popular Drupal modules are installed." ""
-#
-        printf "%s\n" "" "Process of enabling Drupal modules..." ""
-# Enable popular Drupal modules
-        drush en -y admin_menu_toolbar, ctools, pathauto, globalredirect, page_title, image_resize_filter, colorbox, jquery_update, xmlsitemap, file_entity, search404
-        # Additional libraries
-        printf "%s\n" "" "Process of installing additional libraries Drupal..." ""
-        mkdir -p /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
-#
-# To include a code library external to the Drupal project
-# http://drupal.org/packaging-whitelist
-# Install Colobox librarie
-        cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
-        drush colorbox-plugin
-#
-# Install Colobox librarie if not work drush command
-#   wget --no-check-certificate https://github.com/jackmoore/colorbox/tarball/master
-#   unzip master -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
-#   cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
-#   rename colorbox* colorbox colorbox*
-#
-        printf "%s\n" "" "The end of the installation of additional libraries." ""
-#
-        printf "%s\n" "" "Popular Drupal modules are enabled." ""
-    fi
-# Disconnecting module Drupal shorcut
-#   drush dis toolbar shorcut -y
-#
 # To set temporary file directory path
     drush --backup-location=/home/${_user}/public_html/${_sitepatch}/tmp
 #
@@ -320,89 +284,6 @@ case "$_distrnumber" in
 *)  echo "$_distrnubmer" is not processed
     ;;
 esac
-#
-# Install Supex Dumper backup database
-read -p "Drush makes it easy to quickly back up and restore Drupal databases.
-Do you want to install Supex Dumper backup database for Drupal 7? (y/N): " replysd
-_replysd=${replysd,,} # to lower case
-if [[ $_replysd =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "Process of installing Supex Dumper..." ""
-# Installing Supex Dumper
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
-    wget https://sypex.net/files/SypexDumper_2011.zip
-    unzip SypexDumper_2011.zip -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
-# mv /home/${_user}/Загрузки/sxd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd
-# Installing Supex Dumper for Drupal 7
-    wget https://sypex.net/files/sxd2_for_drupal7.zip
-    unzip sxd2_for_drupal7.zip -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd
-    mv /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/modules/sypex_dumper /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/modules/sypex_dumper
-    chmod 777 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/backup
-    chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/ses.php
-    chmod 666 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sxd/cfg.php
-    drush en -y sypex_dumper
-    chown -Rf ${_user}:${_group} sites/all/modules
-    printf "%s\n" "" "Supex Dumper for Drupal are installed." ""
-fi
-#
-# Set piwik, unfinished script.
-#
-# Pre-install modules for openSUSE GeoIP
-# для Apache и PHP
-# zypper install apache2-mod_geoip
-# zypper install php5-devel
-# SuSEconfig
-# mkdir -p /usr/share/GeoIP
-# wget http://pecl.php.net/get/geoip-1.0.7.tgz
-# (whatever the latest version is from http://pecl.php.net/package/geoip )
-# tar -xzf geoip-1.0.7.tgz
-# cd geoip-1.0.7/
-# phpize
-# ./configure
-# make
-# make install
-# cp /etc/php5/conf.d/gd.ini /etc/php5/conf.d/geoip.ini
-# Редактирование файлов geoip.ini и php.ini в ручную
-# vi /etc/php5/conf.d/geoip.ini
-# Change gd.so to geoip.so
-# :wq!
-# vi /etc/php5/apache2/php.ini
-# Find the [gd] section and add a new section afterwards:
-# [geoip]
-# geoip.custom_directory = /usr/share/GeoIP/
-# :wq!
-#
-# systemctl restart apache2.service
-#
-# Set distribution piwik
-# mkdir /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/piwik
-# git clone https://github.com/piwik/piwik /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/piwik
-#
-
-# Installing Drupal module for piwik
-# drush dl piwik
-# drush en -y piwik
-#
-# Configure Apache for piwik Piwik - Logs
-# add_piwik to_apache_conf="
-# <VirtualHost *>
-# Alias /piwik /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/piwik
-# <Directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/piwik
-#   Order allow,deny
-#   Allow from all
-#   AllowOverride None
-#   Options Indexes FollowSymLinks
-#   RewriteEngine On
-#   RewriteCond %{REQUEST_FILENAME} !-d
-#   RewriteCond %{REQUEST_FILENAME} !-f
-#   RewriteRule .* index.php [L,QSA]
-# </Directory>
-# </VirtualHost>"
-#
-# echo "$add_piwik to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
-#
-# systemctl restart apache2.service
-#
-# printf "%s\n" "" "To complete the installation, open the Piwik website: http://${_sitepatch}.lh/piwik." ""
 #
 # Drupal clear cache
 drush -y cc all
