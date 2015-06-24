@@ -15,7 +15,7 @@ Scripts to backup full web-server
 1. lamp-save-dumps.sh;
 2. lamp-restore-data.sh.
 
-Script to install Supex Dumper backup database for Drupal 7:
+Script to  from the directory of site Supex Dumper backup database for Drupal 7:
 install-sdd7.sh
 
 Script remove-composer.sh for development development installation Drupal.
