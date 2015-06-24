@@ -4,6 +4,9 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+#
+printf "%s\n" "" "Run the script from the  directory of site." ""
+#
 # Defining user
 printf "%s\n" "" "The list of people whose profiles can be installed Drupal:" ""
 # List only usernames
