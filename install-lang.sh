@@ -21,12 +21,12 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
     if [[ $_replytranslation =~ ^(yes|y) ]]; then
 # Installation Drupal modules
         printf "%s\n" "" "Process of installing Drupal modules..." ""
-        drush dl i18n, l10n_update, transliteration
+        drush dl i18n, l10n_update
         chown -Rf ${_user}:${_group} sites/all/modules
         printf "%s\n" "" "Drupal modules are installed." ""
 # Enable Drupal modules
         printf "%s\n" "" "Process of enabling Drupal modules..." ""
-        drush en -y i18n, l10n_update, transliteration
+        drush en -y i18n, l10n_update
         printf "%s\n" "" "Drupal modules are enabled." ""
 # Localization Drupal russian language
         printf "%s\n" "" "Installation Drupal localization..." ""
