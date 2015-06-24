@@ -145,6 +145,7 @@ else
   exit
 fi
 #
+# Defining user
 printf '\n'
 echo -n "Enter the name of the site (oneenglishword): "
 read  sitepatch
@@ -310,33 +311,6 @@ case "$_distrnumber" in
     fi
 # Disconnecting module Drupal shorcut
 #   drush dis toolbar shorcut -y
-#
-# Installation Drupal translation
-    read -p "Do you want to install Drupal translation? (y/n): " replytranslation
-    _replytranslation=${replytranslation,,} # # to lower case
-    if [[ $_replytranslation =~ ^(yes|y) ]]; then
-# Installation Drupal modules
-        printf "%s\n" "" "Process of installing Drupal modules..." ""
-        drush dl i18n, l10n_update, transliteration
-        chown -Rf ${_user}:${_group} sites/all/modules
-        printf "%s\n" "" "Drupal modules are installed." ""
-# Enable Drupal modules
-        printf "%s\n" "" "Process of enabling Drupal modules..." ""
-        drush en -y i18n, l10n_update, transliteration
-        printf "%s\n" "" "Drupal modules are enabled." ""
-# Localization Drupal russian language
-        printf "%s\n" "" "Installation Drupal localization..." ""
-        drush dl drush_language -y
-        echo -n "Enter an identifier language, eg ru: "
-        read lang
-        drush language-add $lang && drush language-enable $_
-        drush language-default $lang
-# Download translation files
-        printf "%s\n" "" "Installation Drupal translation files..." ""
-        drush l10n-update-refresh -y
-        drush l10n-update -y
-        printf "%s\n" "" "Drupal translation are installed." ""
-    fi
 #
 # To set temporary file directory path
     drush --backup-location=/home/${_user}/public_html/${_sitepatch}/tmp
