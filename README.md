@@ -1,7 +1,7 @@
 # Configuring-openSUSE-LAMP-Drush-Drupal
-Configuring LAMP (Linux + Apache + MySQL + PHP) by operating system openSUSE to CMS Drupal
+Configuring LAMP (Linux + Apache + MySQL + PHP) by operating system openSUSE to CMS Drupal. After testing, it became clear that more reliable to install distributions Drupal using a browser, than using the command drush site-install, and useing several scripts instead of one.
 
-There are four scripts for the management of CMS Drupal and LAMP (Linux + Apache + MySQL + PHP) under the operating system openSUSE:
+There are four scripts for the management of CMS Drupal and LAMP (Linux + Apache + MySQL + PHP) under the operating system openSUSE. Drupal installation directory /home/user/public_html/ in the same place may be located the scripts to LAMP and Drupal or any convenient location to you.
 1. install-lamp.sh;
 2. install-drupal.sh.
 
@@ -15,7 +15,8 @@ Scripts to backup full web-server
 1. lamp-save-dumps.sh;
 2. lamp-restore-data.sh.
 
-Drupal installation directory /home/user/public_html/ in the same place may be located the scripts to LAMP and Drupal or any convenient location to you.
+Script to install Supex Dumper backup database for Drupal 7:
+install-sdd7.sh
 
 Script remove-composer.sh for development development installation Drupal.
 
