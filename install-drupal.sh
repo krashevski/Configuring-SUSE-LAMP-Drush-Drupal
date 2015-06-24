@@ -122,8 +122,6 @@ _group='www'
 #
 distr[9]="Pushtape Music -  for musician bands, and record labels websites"
 #
-distr[13]="Conference Organizing Distribution (COD) - conference website with features"
-#
 distr[16]="Drupal core - only the main core of Drupal"
 printf "%s\n" "" "The list of available distributions to install Drupal:" ""
 #
@@ -170,9 +168,9 @@ _dbpass=$dbpass # = 'rootpassword'
 # To automatic install Drupal
 printf "%s\n" "" "Drupal installation process..." ""
 #
-# Создание базы данных
+# Creating a database
 # drush sql-create --db-su=${_dbuser} --db-su-pw=${_dbpass} --db-url="mysql://${_dbuser}:${_dbpass}@localhost/${_dbname}"
-# printf "%s\n" "" "База данных создана." ""
+# printf "%s\n" "" "The database was created" ""
 #
 # Creating a web server configuration
 add_to_apache_conf="
@@ -207,7 +205,8 @@ cd /home/${_user}/public_html/${_sitepatch}
 # Get last version of Drupal disributive
 case "$_distrnumber" in
 '9')
-    printf "%s\n" "" "Process installation Pushtape Music -  for musician bands, and record labels websites..." ""
+    printf "%s\n" "" "Process installation Pushtape Music -  for musician bands, and record labels websites."
+    printf "%s\n" "To install Drupal using a web-browser..." ""
     drush dl pushtape --drupal-project-rename=${_sitepatch}.lh
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
@@ -220,96 +219,32 @@ case "$_distrnumber" in
 # Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
     mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
-#   drush vset file_temporary_path /home/${_user}/public_html/${_sitepatch}/tmp
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
+    echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
+#
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chown -Rf ${_user}:${_group} sites/default/files
 #
 # Increase the upload max filesize
     sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
     systemctl restart apache2.service
 #
-    drush si pushtape --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
-#
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chown -Rf ${_user}:${_group} sites/default/files
-#
-# Installation Drupal translation
-    read -p "Do you want to install Drupal translation? (y/n): " replytranslation
-    _replytranslation=${replytranslation,,} # # to lower case
-    if [[ $_replytranslation =~ ^(yes|y) ]]; then
-# Installation popular Drupal 7 modules
-        printf "%s\n" "" "Process of installing Drupal modules..." ""
-        drush dl i18n, l10n_update, transliteration
-        chown -Rf ${_user}:${_group} sites/all/modules
-        printf "%s\n" "" "Drupal modules are installed." ""
-# Enable popular Drupal modules
-        printf "%s\n" "" "Process of enabling Drupal modules..." ""
-        drush en -y i18n, l10n_update, transliteration
-        printf "%s\n" "" "Drupal modules are enabled." ""
-# Localization Drupal russian language
-        printf "%s\n" "" "Install Drupal localization..." ""
-        drush dl drush_language -y
-        echo -n "Enter an identifier language, eg ru: "
-        read lang
-        drush language-add $lang && drush language-enable $_
-        drush language-default $lang
-# Download translation files
-        printf "%s\n" "" "Instalation Drupal translation files..." ""
-        drush l10n-update-refresh -y
-        drush l10n-update -y
-        printf "%s\n" "" "Drupal translation are installed." ""
-    fi
-    ;;
-'13')
-    printf "%s\n" "" "Process installation Conference Organizing Distribution (COD) - conference website with features..." ""
-    drush dl cod --drupal-project-rename=${_sitepatch}.lh
-#
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chmod -Rf 770 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    cp sites/default/default.settings.php sites/default/settings.php
-    chown ${_user}:${_group} sites/default/settings.php
-    chmod 660 sites/default/settings.php
-#
-# Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
-    mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
-    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
-#   drush vset file_temporary_path /home/${_user}/public_html/${_sitepatch}/tmp
-    chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
-#
-# Increase the allowable PHP execution time
-    sed -i 's/max_execution_time.*/max_execution_time = 120/g' /etc/php5/apache2/php.ini
-    systemctl restart apache2.service
-#
-    drush si cod --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
-#
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chown -Rf ${_user}:${_group} sites/default/files
+# Создание базы данных
+    drush sql-create --db-su=${_dbuser} --db-su-pw=${_dbpass} --db-url="mysql://${_dbuser}:${_dbpass}@localhost/${_dbname}" --yes
+    printf "%s\n" "" "The database was created:" ${_dbname}"." ""
 #
 # Install Drupal translation
-    read -p "Do you want to install Drupal translation? (y/n): " replytranslation
-    _replytranslation=${replytranslation,,} # # to lower case
-    if [[ $_replytranslation =~ ^(yes|y) ]]; then
-# Install popular Drupal 7 modules
-        printf "%s\n" "" "Process of installing Drupal modules..." ""
-        drush dl i18n, l10n_update, transliteration
-        printf "%s\n" "" "Drupal modules are installed." ""
-# Enable popular Drupal modules
-        printf "%s\n" "" "Process of enabling Drupal modules..." ""
-        drush en -y i18n, l10n_update, transliteration
-        printf "%s\n" "" "Drupal modules are enabled." ""
-# Localization Drupal russian language
-        printf "%s\n" "" "Install Drupal localization..." ""
-        drush dl drush_language -y
-        echo -n "Enter an identifier language, eg ru: "
-        read lang
-        drush language-add $lang && drush language-enable $_
-        drush language-default $lang
-# Download translation files
-        printf "%s\n" "" "Instalation Drupal translation files..." ""
-        drush l10n-update-refresh -y
-        drush l10n-update -y
-        printf "%s\n" "" "Drupal translation are installed." ""
-    fi
+#    read -p "Do you want to install Drupal translation? (y/n): " replytranslation
+#    _replytranslation=${replytranslation,,} # # to lower case
+#    if [[ $_replytranslation =~ ^(yes|y) ]]; then
+#        echo -n "Enter an identifier language, eg ru: "
+#        read _lang
+#    else
+#       _lang='en'
+#    fi
+#    drush si pushtape expert --locale=${_lang} --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
+#
+    firefox -new-tab http://"${_sitepatch}".lh
     ;;
 '16')
     printf "%s\n" "" "Process installation Drupal core..." ""
@@ -331,10 +266,15 @@ case "$_distrnumber" in
 # String to config tmp directory
 #   echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
+    drush --backup-location=/home/${_user}/public_html/${_sitepatch}/tmp
+#
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chown -Rf ${_user}:${_group} sites/default/files
 #
 # This install Drupal 7 user=admin password=admin
     drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --account-name=admin --account-pass=admin --site-name=${_sitepatch} --account-mail=admin@${_sitepatch}.lh --yes
 #
+
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
 # Security settings Drupal site
@@ -370,15 +310,13 @@ case "$_distrnumber" in
 #   unzip master -d /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
 #   cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/all/libraries
 #   rename colorbox* colorbox colorbox*
-
+#
         printf "%s\n" "" "The end of the installation of additional libraries." ""
 #
         printf "%s\n" "" "Popular Drupal modules are enabled." ""
     fi
 # Disconnecting module Drupal shorcut
 #   drush dis toolbar shorcut -y
-#
-    printf '\n'
 #
 # Install Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
@@ -406,6 +344,7 @@ case "$_distrnumber" in
         drush l10n-update -y
         printf "%s\n" "" "Drupal translation are installed." ""
     fi
+    printf "%s\n" "" "If used drush site-install, it may be a problem with login in the site." ""
     ;;
 *)  echo "$_distrnubmer" is not processed
     ;;
@@ -413,7 +352,7 @@ esac
 #
 # Install Supex Dumper backup database
 read -p "Drush makes it easy to quickly back up and restore Drupal databases.
-Do you want to install Supex Dumper backup database for drupal 7? (y/N): " replysd
+Do you want to install Supex Dumper backup database for Drupal 7? (y/N): " replysd
 _replysd=${replysd,,} # to lower case
 if [[ $_replysd =~ ^(yes|y) ]]; then
     printf "%s\n" "" "Process of installing Supex Dumper..." ""
@@ -503,9 +442,8 @@ systemctl restart mysql.service
 printf "%s\n" "" "Drush status:" ""
 drush status
 #
-printf "%s\n" "" "Please, open Drupal site http://"${_sitepatch}".lh." ""
+printf "%s\n" "" "Please, open Drupal site http://'${_sitepatch}'.lh. Database name: '${_dbname}'." ""
 # printf "%s\n" "" "Drupal was set in the directory /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh." ""
-printf "%s\n" "" "After login Drupal site set Configuration -> Multimedia -> File system specified a directory for temporary files: ../tmp" ""
 #
 printf "%s\n" "" "Note: Run drush commands when finished 'cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh'; 'drush help'" ""
 #
