@@ -9,7 +9,7 @@
 # Attribution-ShareAlike 3.0 Unported License;
 # see http://creativecommons.org/licenses/by-sa/3.0/
 # for more information.
-#----------------------------------------------------#
+#----------------------------------------------------
 #
 # The full version of all the scripts
 # in the book
