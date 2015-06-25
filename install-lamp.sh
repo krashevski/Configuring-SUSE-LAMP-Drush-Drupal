@@ -67,7 +67,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
 # PHP configuration settings https://www.drupal.org/requirements/php
     printf "%s\n" "" "PHP installation process..." ""
-    zypper install php5 php5-gd php-db php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-fileinfo php5-xmlwriter php5-zip php5-ftp php5-pear php5-devel
+    zypper install php5 php5-gd php5-mysql php5-bcmath php5-ctype php5-dom php5-json php5-fileinfo php5-xmlwriter php5-zip php5-ftp php5-pear php5-devel
 # Increase PHP memory limit
     sed -i 's/memory_limit.*/memory_limit = 64M/g' /etc/php5/apache2/php.ini
 #
@@ -104,9 +104,34 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     _replymem=${replymem,,} # # to lower case
     if [[ $_replymem =~ ^(yes|y) ]]; then
         printf "%s\n" "" "memcache installation process..." ""
-        pecl install memcache
         zypper in memcached
-#   ...
+        zypper in libmemcache0
+        zypper in libmemcached
+        zypper addrepo http://download.opensuse.org/repositories/server:/php:/extensions/server_php_openSUSE_$version/ server:php:extensions
+        zypper refresh
+        zypper in php5-pecl-memcache
+#
+# Instruct PHP to load the extension
+        if ! grep -q 'extension=memcache.so' /etc/php5/conf.d/memcache.ini ; then
+            echo "extension=memcache.so" >> /etc/php5/conf.d/memcache.ini
+        fi
+        if ! grep -q 'memcache.hash_strategy' /etc/php5/apache2/php.ini ; then
+            echo 'memcache.hash_strategy="consistent"' >> /etc/php5/apache2/php.ini
+        fi
+#
+# Firewall Configuration
+        sed -i 's/FW_SERVICES_EXT_TCP.*/FW_SERVICES_EXT_TCP="memcache 11211"/g' /etc/sysconfig/SuSEfirewall2
+        echo -e 'TCP="11211"' > /etc/sysconfig/SuSEfirewall2.d/services/memcached
+        systemctl restart SuSEfirewall2_init.service
+        systemctl restart SuSEfirewall2.service
+#
+# Memory setting
+        sed -i 's/MEMCACHED_PARAMS.*/MEMCACHED_PARAMS="-m 1024 -d -l 127.0.0.1"/g' /etc/sysconfig/memcached
+        systemctl enable memcached.service
+        systemctl start memcached.service
+# Auto-start Memcached on booting
+        chkconfig memcached on
+#
         printf "%s\n" "" "Memcache are installed." ""
     fi
 #
@@ -199,6 +224,14 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 /etc/apache2/vhosts.d/ip-based_vhosts.conf
 /etc/hosts
 /etc/hostname" ""
+fi
+if [[ $_replymem =~ ^(yes|y) ]]; then
+    printf "%s\n" "" "to check memcache:
+php -i | grep memcache
+ps aux | grep memcache
+memcached-tool 127.0.0.1:11211 stats
+netstat -tap | grep memcached
+chkconfig" ""
 fi
 #
 exit 0
