@@ -4,6 +4,20 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+# Variables
+# Check user
+curuser=`whoami`
+if test $curuser != "root"; then
+  echo 'Run the script as user root with sudo command.'
+  exit
+fi
+#
+stty -echo
+read -p "Enter the root password of the system user: " pass
+stty echo
+printf '\n'
+_pass=$pass # root pass
+#
 printf "%s\n" "" "Run the script from the directory of site." ""
 #
 read -p "Do you want to continue? (y/n): " replydir
@@ -22,6 +36,9 @@ echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> sites/default/setting
 # Security settings Drupal site
 chmod 640 sites/default/settings.php
 chmod 640 sites/default
+#
+# Drupal clear cache
+drush -y cc all
 #
 printf "%s\n" "" "Drush status:" ""
 drush status
