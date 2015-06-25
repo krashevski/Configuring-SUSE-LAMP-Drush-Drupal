@@ -195,7 +195,13 @@ ServerAlias ${_sitepatch}.lh *.${_sitepatch}.lh
 ServerAdmin admin@${_sitepatch}.lh
 </VirtualHost>"
 #
-echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
+if ! grep -q '${_sitepatch}.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
+    echo "$add_to_apache_conf" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
+else
+    printf "%s\n" "" "This site already exists, choose another name."
+    exit
+fi
+
 #
 # Host names
 add_to_hosts_conf="127.0.0.1 ${_sitepatch}.lh www.${_sitepatch}.lh"
