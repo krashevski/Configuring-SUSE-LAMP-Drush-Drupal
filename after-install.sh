@@ -28,15 +28,16 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
 # Web server process may run with group permissions of the group "www", defining groups
     _group='www'
 #
-chown -Rf ${_user}:${_group} sites/default/files
+    chown -Rf ${_user}:${_group} sites/default/files
 #
 # Path to tmp directory
-echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> sites/default/settings.php
+    echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> sites/default/settings.php
 #
 # Security settings Drupal site
-chmod 640 sites/default/settings.php
-chmod 640 sites/default
+    chmod 640 sites/default/settings.php
+    chmod 640 sites/default
 #
+fi
 # Drupal clear cache
 drush -y cc all
 #
