@@ -136,7 +136,12 @@ done
 printf '\n'
 echo -n "Enter the number of available distribution: "
 read distrnumber
-_distrname=${distr[$distrnumber]}
+if printf "%s\n" ${!distr[@]}|grep -q ^${distrnumber}$ ; then
+    _distrname=${distr[$distrnumber]}
+else
+    echo Distribution ${distrnumber} not exist
+    exit
+fi
 echo -n "You have chosen the distribution" ${_distrname}"." ""
 read -p "Do you want to continue? (y/n): " replydistr
 _replydistr=${replydistr,,} # # to lower case
