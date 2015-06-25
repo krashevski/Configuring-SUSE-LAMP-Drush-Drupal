@@ -34,7 +34,11 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
         echo -n "Enter an identifier language, eg ru: "
         read lang
         drush language-add $lang && drush language-enable $_
-        drush language-default $lang
+        read -p "Do you want to install language '$lang' default? (y/n): " replylang
+        _replylang=${replylang,,} # # to lower case
+        if [[ $_replylang =~ ^(yes|y) ]]; then
+            drush language-default $lang
+        fi
 # Download translation files
         printf "%s\n" "" "Installation Drupal translation files..." ""
         drush l10n-update-refresh -y
@@ -42,6 +46,9 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
     fi
 #
 printf "%s\n" "" "Drupal translation are installed." ""
+#
+# Drupal clear cache
+drush -y cc all
 #
 fi
 #
