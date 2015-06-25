@@ -120,9 +120,11 @@ _group='www'
 #
 # List of Drupal distributions
 #
-distr[9]="Pushtape Music -  for musician bands, and record labels websites"
+distr[5]="Pushtape Music -  for musician bands, and record labels websites"
 #
-distr[16]="Drupal core - only the main core of Drupal"
+distr[7]="openMusicFestival - feature-rich music festival site"
+#
+distr[16]="Drupal core - for testing command drush site-install"
 printf "%s\n" "" "The list of available distributions to install Drupal:" ""
 #
 for each in "${!distr[@]}"
@@ -205,12 +207,16 @@ cd /home/${_user}/public_html/${_sitepatch}
 #
 # Get last version of Drupal disributive
 case "$_distrnumber" in
-'9')
+'5')
     printf "%s\n" "" "Process installation Pushtape Music -  for musician bands, and record labels websites."
     printf "%s\n" "To install Drupal using a web-browser..." ""
     drush dl pushtape --drupal-project-rename=${_sitepatch}.lh
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+# Increase the upload max filesize for Pushtape Music
+    sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
+    systemctl restart apache2.service
+#
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chmod -Rf 770 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     cp sites/default/default.settings.php sites/default/settings.php
@@ -221,14 +227,10 @@ case "$_distrnumber" in
     mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
-    echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/sites/default/settings.php
 #
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
 #
-# Increase the upload max filesize for Pushtape Music
-    sed -i 's/upload_max_filesize.*/upload_max_filesize = 10M/g' /etc/php5/apache2/php.ini
-    systemctl restart apache2.service
 #
 # Increase the allowable PHP execution time if install "Conference Organizing Distribution (COD) - conference website with features" distributive
 #    sed -i 's/max_execution_time.*/max_execution_time = 120/g' /etc/php5/apache2/php.ini
@@ -239,6 +241,28 @@ case "$_distrnumber" in
 #
 #   drush si pushtape expert --locale=${_lang} --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --account-name=admin --account-pass=admin --db-su=${_dbuser} --db-su-pw=${_dbpass} --site-name=${_sitepatch} --yes
 #
+# Open site in browser to continue the installation
+    firefox -new-tab http://"${_sitepatch}".lh
+    ;;
+'7')
+# Install openMusicFestival https://github.com/aendrew/openMusicFestival
+    printf "%s\n" "" "Process installation openMusicFestival..." ""
+    drush dl openmusicfestival --drupal-project-rename=${_sitepatch}.lh
+# This install
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh/
+    drush make --prepare-install openmusicfestival.make
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    chmod -Rf 770 /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    cp sites/default/default.settings.php sites/default/settings.php
+    chown ${_user}:${_group} sites/default/settings.php
+    chmod 660 sites/default/settings.php
+# Local temporary directory with Backup and Migrate module or Drush found on admin/config/media/file-system
+    mkdir -p /home/${_user}/public_html/${_sitepatch}/tmp
+    chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
+    chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
+# Creating a database
+    drush sql-create --db-su=${_dbuser} --db-su-pw=${_dbpass} --db-url="mysql://${_dbuser}:${_dbpass}@localhost/${_dbname}" --yes
+    printf "%s\n" "" "The database was created:" ${_dbname}"." ""
 # Open site in browser to continue the installation
     firefox -new-tab http://"${_sitepatch}".lh
     ;;
@@ -261,23 +285,17 @@ case "$_distrnumber" in
     chown -Rf ${_user}:${_group} /home/${_user}/public_html/${_sitepatch}/tmp
     chmod -R 770 /home/${_user}/public_html/${_sitepatch}/tmp
 #
-    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
-    chown -Rf ${_user}:${_group} sites/default/files
-#
 # This install Drupal 7 user=admin password=admin
     drush si standard --db-url=mysql://${_dbuser}:${_dbpass}@localhost/${_dbname} --db-su=${_dbuser} --db-su-pw=${_dbpass} --account-name=admin --account-pass=admin --site-name=${_sitepatch} --account-mail=admin@${_sitepatch}.lh --yes
 #
-
     cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
     chown -Rf ${_user}:${_group} sites/default/files
-# Security settings Drupal site
-#    chmod 640 sites/default/settings.php
-#    chmod 640 sites/default
+#
+# Site temporary directory path
+    cd /home/${_user}/public_html/${_sitepatch}/${_sitepatch}.lh
+    drush vset file_temporary_path ../tmp
 #
     printf "%s\n" "" "Drupal distribution was installed in a directory /home/"${_user}"/public_html/"${_sitepatch}"/"${_sitepatch}".lh." ""
-#
-# To set temporary file directory path
-    drush --backup-location=/home/${_user}/public_html/${_sitepatch}/tmp
 #
     printf "%s\n" "" "If used drush site-install, it may be a problem with login in the site." ""
     ;;
