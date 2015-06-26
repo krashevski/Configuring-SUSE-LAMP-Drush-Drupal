@@ -230,8 +230,7 @@ if [[ $_replymem =~ ^(yes|y) ]]; then
 php -i | grep memcache
 ps aux | grep memcache
 memcached-tool 127.0.0.1:11211 stats
-netstat -tap | grep memcached
-chkconfig" ""
+netstat -tap | grep memcached" ""
 fi
 #
 exit 0
