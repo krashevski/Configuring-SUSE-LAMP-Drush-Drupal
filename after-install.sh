@@ -30,8 +30,19 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
 #
     chown -Rv ${_user}:${_group} sites/default/files
 #
+# Decrease security settings Drupal site
+    chmod 0770 sites/default/settings.php
+    chmod 0775 sites/default
 # Path to tmp directory
-    echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> sites/default/settings.php
+    read -p "Do you want to make a temporary directory ./tmp? (y/n): " replytmp
+    _replytmp=${replytmp,,} # # to lower case
+    if [[ $_replytmp =~ ^(yes|y) ]]; then
+        if ! grep -q 'file_temporary_path' sites/default/settings.php ; then
+            echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> sites/default/settings.php
+        fi
+    else
+        sed --in-place '/file_temporary_path/d' sites/default/settings.php
+    fi
 #
 # Security settings Drupal site
     chmod 0440 sites/default/settings.php
