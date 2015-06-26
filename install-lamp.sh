@@ -89,13 +89,16 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
 # A configuration of the php.ini file(s)
         mkdir -p /usr/lib/php5/extensions
-        echo -e "extension=uploadprogress.so" > /usr/lib/php5/extensions/uploadprogress.ini
-        echo -e "extension=uploadprogress.so" > /etc/php5/conf.d/uploadprogress.ini
+        if ! grep -q 'extension=uploadprogress.so' /usr/lib/php5/extensions/uploadprogress.ini ; then
+            echo "extension=uploadprogress.so" >> /usr/lib/php5/extensions/uploadprogress.ini
+        fi
+        if ! grep -q 'extension=uploadprogress.so' /etc/php5/conf.d/uploadprogress.ini ; then
+            echo "extension=uploadprogress.so" >> /etc/php5/conf.d/uploadprogress.ini
+        fi
 # Test PHP interpreter is reflecting the changes
 # zypper install htop
 # htop
 #
-        zypper remove php5-dev
         printf "%s\n" "" "PECL and uploadprogress are installed." ""
     fi
 #
@@ -104,12 +107,19 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
     _replymem=${replymem,,} # # to lower case
     if [[ $_replymem =~ ^(yes|y) ]]; then
         printf "%s\n" "" "memcache installation process..." ""
-        zypper in memcached
-        zypper in libmemcache0
-        zypper in libmemcached
-        zypper addrepo http://download.opensuse.org/repositories/server:/php:/extensions/server_php_openSUSE_$version/ server:php:extensions
-        zypper refresh
-        zypper in php5-pecl-memcache
+        zypper install memcached
+        zypper install libmemcached
+# or
+#       zypper install cyrus-sasl-devel
+#       zypper install gcc-c++
+#       wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
+#       tar -xzf libmemcached-1.0.18.tar.gz
+#       cd libmemcached-1.0.18
+#       ./configure
+#       make
+#       make install
+#       pecl install memcached
+#       libmemcached directory [no] : /usr/local
 #
 # Instruct PHP to load the extension
         if ! grep -q 'extension=memcache.so' /etc/php5/conf.d/memcache.ini ; then
@@ -118,11 +128,15 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
         if ! grep -q 'memcache.hash_strategy' /etc/php5/apache2/php.ini ; then
             echo 'memcache.hash_strategy="consistent"' >> /etc/php5/apache2/php.ini
         fi
+        zypper addrepo http://download.opensuse.org/repositories/home:illuusio/openSUSE_$version/home:illuusio.repo
+        zypper refresh
+        zypper install php5-memcached
+# or
+#       zypper install php5-pecl-memcache
 #
 # Firewall Configuration
         sed -i 's/FW_SERVICES_EXT_TCP.*/FW_SERVICES_EXT_TCP="memcache 11211"/g' /etc/sysconfig/SuSEfirewall2
-        echo -e 'TCP="11211"' > /etc/sysconfig/SuSEfirewall2.d/services/memcached
-        systemctl restart SuSEfirewall2_init.service
+#       echo -e 'TCP="11211"' > /etc/sysconfig/SuSEfirewall2.d/services/memcached
         systemctl restart SuSEfirewall2.service
 #
 # Memory setting
@@ -134,6 +148,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
         printf "%s\n" "" "Memcache are installed." ""
     fi
+    zypper remove php5-devel
 #
 # Make phpinfo file
     mkdir -p /srv/www/htdocs/phpinfo
@@ -167,16 +182,15 @@ ServerAlias phpinfo.lh *.phpinfo.lh
     fi
     systemctl restart apache2.service
     printf "%s\n" "" "Apache configuration is created. Please, open phpinfo at http://phpinfo.lh." ""
-fi
 #
-read -p "Do you want to install phpMyAdmin to databases management on this machine? (y/n): " replypma
-_replypma=${replypma,,} # # to lower case
-if [[ $_replypma =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "phpMyAdmin installation process..." ""
-    zypper install phpmyadmin
-#   printf "%s\n" "" "Apache web-service configuration process..." ""
+    read -p "Do you want to install phpMyAdmin to databases management on this machine? (y/n): " replypma
+    _replypma=${replypma,,} # # to lower case
+    if [[ $_replypma =~ ^(yes|y) ]]; then
+        printf "%s\n" "" "phpMyAdmin installation process..." ""
+        zypper install phpmyadmin
+#       printf "%s\n" "" "Apache web-service configuration process..." ""
 # Creating web server configuration
-    add_to_apache_conf_pma="
+        add_to_apache_conf_pma="
 <VirtualHost *>
 DocumentRoot /srv/www/htdocs/phpMyAdmin
 ServerName www.phpmyadmin.lh
@@ -187,17 +201,18 @@ ServerAlias phpmyadmin.lh *.phpmyadmin.lh
 </Directory>
 </VirtualHost>"
 #
-    if ! grep -q 'phpmyadmin.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
-        echo "$add_to_apache_conf_pma" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
-    fi
-    if ! grep -q 'phpmyadmin.lh' /etc/hosts ; then
-        echo 127.0.0.1 phpmyadmin.lh >> /etc/hosts
-        echo 127.0.0.1 www.phpmyadmin.lh >> /etc/hosts
-    fi
-    systemctl restart apache2.service
+        if ! grep -q 'phpmyadmin.lh' /etc/apache2/vhosts.d/ip-based_vhosts.conf ; then
+            echo "$add_to_apache_conf_pma" >> /etc/apache2/vhosts.d/ip-based_vhosts.conf
+        fi
+        if ! grep -q 'phpmyadmin.lh' /etc/hosts ; then
+            echo 127.0.0.1 phpmyadmin.lh >> /etc/hosts
+            echo 127.0.0.1 www.phpmyadmin.lh >> /etc/hosts
+        fi
+        systemctl restart apache2.service
 #
-    printf "%s\n" "" "Apache configuration is created. Please, open phpMyAdmin at http://phpmyadmin.lh." ""
-    printf "%s\n" "" "phpMyAdmin are installed." ""
+        printf "%s\n" "" "Apache configuration is created. Please, open phpMyAdmin at http://phpmyadmin.lh." ""
+        printf "%s\n" "" "phpMyAdmin are installed." ""
+    fi
 fi
 #
 zypper install webmin
@@ -226,7 +241,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 /etc/hostname" ""
 fi
 if [[ $_replymem =~ ^(yes|y) ]]; then
-    printf "%s\n" "" "to check memcache:
+    printf "%s\n" "" "To check memcache:
 php -i | grep memcache
 ps aux | grep memcache
 memcached-tool 127.0.0.1:11211 stats
