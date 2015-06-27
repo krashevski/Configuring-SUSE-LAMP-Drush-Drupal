@@ -4,13 +4,6 @@
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 23.08.2014
 #
-#----------------------------------------------------
-# This work is licensed under a Creative Commons 
-# Attribution-ShareAlike 3.0 Unported License;
-# see http://creativecommons.org/licenses/by-sa/3.0/ 
-# for more information.
-#----------------------------------------------------
-#
 # The full version of all the scripts 
 # in the book 
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
