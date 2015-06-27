@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to automatic install Drupal
+# Script to install CMS Drupal
 #
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
