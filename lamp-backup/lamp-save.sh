@@ -8,6 +8,8 @@
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal,
 # online - https://www.lap-publishing.com/catalog/
 # 
+# The script is published on https://github.com/krashevski/Configuring-SUSE-LAMP-Drush-Drupal licensed under the GNU GPL
+#
 # When creating script was to use the script
 # Jon 01-07-2014 at 12:38
 # Backup (mysql dump) all your MySQL databases in separate files
