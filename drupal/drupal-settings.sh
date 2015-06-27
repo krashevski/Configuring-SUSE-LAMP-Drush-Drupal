@@ -6,6 +6,8 @@
 #
 # The script is published on https://github.com/krashevski/Configuring-SUSE-LAMP-Drush-Drupal licensed under the GNU GPL
 #
+# Script to be run after the installation of Drupal
+#
 ##
 #
 # Variables
