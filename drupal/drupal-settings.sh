@@ -4,6 +4,8 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+# The script is published on https://github.com/krashevski/Configuring-SUSE-LAMP-Drush-Drupal licensed under the GNU GPL
+#
 ##
 #
 # Variables
