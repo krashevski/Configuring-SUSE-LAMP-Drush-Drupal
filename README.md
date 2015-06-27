@@ -6,17 +6,18 @@ There are four scripts for the management of CMS Drupal and LAMP (Linux + Apache
 2. install-drupal.sh.
 
 Scripts after installation Drupal from browser from the directory of site:
-1. install-lang.sh;
-2. install-modules.sh;
-3. install-libs.sh;
-4. after-install.sh.
+1. drupal-lang.sh;
+2. druapl-modules.sh;
+3. druapl-libs.sh;
+4. druapl-settings.sh.
+Script to  from the directory of site Supex Dumper backup database for Drupal 7:
+drupal-sdd7.sh
 
 Scripts to backup full web-server:
 1. lamp-save-dumps.sh;
 2. lamp-restore-data.sh.
 
-Script to  from the directory of site Supex Dumper backup database for Drupal 7:
-install-sdd7.sh
+
 
 Script remove-composer.sh for development development installation Drupal.
 
