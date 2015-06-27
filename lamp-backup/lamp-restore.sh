@@ -4,11 +4,12 @@
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 23.08.2014
 #
-# The full version of all the scripts 
-# in the book 
-# Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
-# Online https://www.ljubljuknigi.ru
+# Explanation of these scripts have been published in the book:
+# Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal,
+# online - https://www.lap-publishing.com/catalog/
 # 
+##
+#
 # Variables
 # Check user
 curuser=`whoami`
