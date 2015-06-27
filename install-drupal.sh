@@ -4,10 +4,9 @@
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
-# The full version of all the scripts
-# in the book
-# Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
-# Online https://www.ljubljuknigi.ru
+# Explanation of these scripts have been published in the book:
+# Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal,
+# online - https://www.ljubljuknigi.ru
 #
 # This script installs as a Drupal site sitename.lh in directory
 # /public_html/sitename/sitename.lh
