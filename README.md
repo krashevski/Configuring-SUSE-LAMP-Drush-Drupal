@@ -1,5 +1,5 @@
 # Configuring-openSUSE-LAMP-Drush-Drupal
-Configuring LAMP (Linux + Apache + MySQL + PHP) by operating system openSUSE to CMS Drupal. After testing, it became clear that more reliable to install distributions Drupal using a browser, than using the command drush site-install, and suitable useing several scripts instead of one.
+Configuring LAMP (Linux + Apache + MySQL + PHP) by operating system openSUSE to CMS Drupal. After testing, it became clear that more reliable to install distributions Drupal using a browser, than using the command drush site-install, and suitable use several scripts instead of one.
 
 There are scripts for the management of CMS Drupal and LAMP (Linux + Apache + MySQL + PHP) under the operating system openSUSE. 
 
