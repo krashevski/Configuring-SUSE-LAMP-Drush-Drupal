@@ -6,6 +6,8 @@
 #
 # The script is published on https://github.com/krashevski/Configuring-SUSE-LAMP-Drush-Drupal licensed under the GNU GPL
 #
+# Scripts after installation Drupal from browser to run from the directory of site
+#
 ##
 #
 printf "%s\n" "" "Run the script from the directory of site." ""
