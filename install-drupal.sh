@@ -6,7 +6,7 @@
 #
 # Explanation of these scripts have been published in the book:
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal,
-# online - https://www.ljubljuknigi.ru
+# online - https://www.lap-publishing.com/catalog/
 #
 # This script installs as a Drupal site sitename.lh in directory
 # /public_html/sitename/sitename.lh
