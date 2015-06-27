@@ -4,6 +4,9 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+# Sypex Dumper backup (dump) of a MySQL database, and also restore the database from the backup - https://sypex.net/
+#
+##
 #
 printf "%s\n" "" "Run the script from the  directory of site." ""
 #
