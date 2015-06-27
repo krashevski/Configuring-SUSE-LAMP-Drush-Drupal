@@ -4,6 +4,8 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+# Scripts after installation Drupal from browser to run from the directory of site
+#
 ##
 #
 printf "%s\n" "" "Run the script from the directory of site." ""
