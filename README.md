@@ -16,8 +16,8 @@ Script to install from the directory of site Supex Dumper backup database for Dr
 drupal-sdd7.sh
 
 Scripts to backup full web-server:
-1. save-dumps.sh;
-2. restore-data.sh.
+1. save-lamp.sh;
+2. restore-lamp.sh.
 
 Script remove-drush.sh designed for development installation Drupal.
 
