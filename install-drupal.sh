@@ -8,6 +8,8 @@
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal,
 # online - https://www.lap-publishing.com/catalog/
 #
+# The script is published on https://github.com/krashevski/Configuring-SUSE-LAMP-Drush-Drupal licensed under the GNU GPL
+#
 # This script installs as a Drupal site sitename.lh in directory
 # /public_html/sitename/sitename.lh
 # user default site admin, password admin site
