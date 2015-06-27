@@ -4,6 +4,8 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+##
+#
 # Variables
 # Check user
 curuser=`whoami`
