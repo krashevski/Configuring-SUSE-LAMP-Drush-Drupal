@@ -5,9 +5,9 @@
 # 19.06.2015
 #
 # The full version of all the scripts
-# in the book
+# in the book:
 # Настройка LAMP (Linux+Apache+MySQL+PHP) под openSUSE для CMS Drupal
-# Online https://www.ljubljuknigi.ru
+# online - https://www.lap-publishing.com/catalog/
 #
 # Check user
 curuser=`whoami`
