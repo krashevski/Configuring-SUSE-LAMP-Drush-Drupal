@@ -4,6 +4,8 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
+##
+#
 read -p "Do you want to remove Composer and Drush? (y/n): " replyremove
 _replyremove=${replyremove,,} # # to lower case
     if [[ $_replyremove =~ ^(yes|y) ]]; then
