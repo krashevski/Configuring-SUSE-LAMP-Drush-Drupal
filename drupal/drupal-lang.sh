@@ -4,7 +4,6 @@
 # Script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 24.06.2015
 #
-#
 printf "%s\n" "" "Run the script from the directory of site." ""
 #
 read -p "Do you want to continue? (y/n): " replydir
