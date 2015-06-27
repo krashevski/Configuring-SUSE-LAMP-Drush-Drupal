@@ -9,15 +9,15 @@ Drupal installation directory /home/user/public_html/ in the same place or any c
 
 Scripts after installation Drupal from browser to run from the directory of site:
 1. drupal-lang.sh;
-2. druapl-modules.sh;
-3. druapl-libs.sh;
-4. druapl-settings.sh.
+2. drupal-modules.sh;
+3. drupal-libs.sh;
+4. drupal-settings.sh.
 Script to install from the directory of site Supex Dumper backup database for Drupal 7:
 drupal-sdd7.sh
 
 Scripts to backup full web-server:
-1. save-lamp.sh;
-2. restore-lamp.sh.
+1. lamp-save.sh;
+2. lamp-restore.sh.
 
 Script remove-drush.sh designed for development installation Drupal.
 
