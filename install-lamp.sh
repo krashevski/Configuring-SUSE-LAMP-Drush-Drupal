@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to automatic install or reinstall LAMP
+# Script to install or reinstall LAMP for CMS
 #
 # Copyright script by Vladislav Krashevskij (v.krashevski#gmail.com)
 # 19.06.2015
