@@ -26,17 +26,6 @@
 # virtual hosts configuration:
 # ip-based_vhosts.conf /etc/apache2/vhosts.d/ root/root rw-r--r--
 #
-# Script to install Drupal installs Drush
-# additional libraries installed script
-# automatically:
-# Colobox librarie
-# Supex Dumper
-# sxd2_for_drupal7
-#
-# Set up a script to install piwik unfinished.
-# Source for setting piwik:
-# http://edoceo.com/howto/piwik.
-#
 ##
 #
 # Variables
