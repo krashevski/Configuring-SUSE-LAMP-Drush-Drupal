@@ -8,6 +8,8 @@
 #
 # Sypex Dumper backup (dump) of a MySQL database, and also restore the database from the backup - https://sypex.net/
 #
+# Scripts after installation Drupal from browser to run from the directory of site
+#
 ##
 #
 printf "%s\n" "" "Run the script from the  directory of site." ""
