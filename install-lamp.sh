@@ -25,7 +25,7 @@ yast -i zypper
 printf "%s\n" "" "zypper are installed.." ""
 #
 read -p "Do you want to install MariaDB sql server on this machine? (y/n): " replymariadb
-_replymariadb=${replymariadb,,} # # to lower case
+_replymariadb=${replymariadb,,} # to lower case
 if [[ $_replymariadb =~ ^(yes|y) ]]; then
     printf "%s\n" "" "MariaDB databases installation process..." ""
 #
@@ -42,7 +42,7 @@ if [[ $_replymariadb =~ ^(yes|y) ]]; then
 fi
 #
 read -p "Do you want to install Apache web-service and PHP programming language for CMS on this machine? (y/n): " replyap
-_replyap=${replyap,,} # # to lower case
+_replyap=${replyap,,} # to lower case
 if [[ $_replyap =~ ^(yes|y) ]]; then
     printf "%s\n" "" "Apache web-service and PHP installation process..." ""
 #
@@ -74,7 +74,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
 # Installation PECL
     read -p "Do you want to install PECL and uploadprogress on this machine? (y/n): " replyul
-    _replyul=${replyul,,} # # to lower case
+    _replyul=${replyul,,} # to lower case
     if [[ $_replyul =~ ^(yes|y) ]]; then
         printf "%s\n" "" "PECL and uploadprogress installation process..." ""
 # Channels update
@@ -100,7 +100,7 @@ if [[ $_replyap =~ ^(yes|y) ]]; then
 #
 # Installation PECL memcache https://www.thefanclub.co.za/how-to/how-install-memcached-opensuse-use-drupal
     read -p "Do you want to install memcache on this machine? (y/n): " replymem
-    _replymem=${replymem,,} # # to lower case
+    _replymem=${replymem,,} # to lower case
     if [[ $_replymem =~ ^(yes|y) ]]; then
         printf "%s\n" "" "memcache installation process..." ""
         zypper install memcached
