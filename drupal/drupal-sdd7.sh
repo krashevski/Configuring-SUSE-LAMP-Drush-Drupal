@@ -15,7 +15,7 @@
 printf "%s\n" "" "Run the script from the  directory of site." ""
 #
 read -p "Do you want to continue? (y/n): " replydir
-_replydir=${replydir,,} # # to lower case
+_replydir=${replydir,,} # to lower case
 if [[ $_replydir =~ ^(yes|y) ]]; then
     _user=`find $directoryname -maxdepth 0 -printf '%u\n'`
 #
