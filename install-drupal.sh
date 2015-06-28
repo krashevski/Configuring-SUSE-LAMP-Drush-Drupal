@@ -127,7 +127,7 @@ else
 fi
 echo -n "You have chosen the distribution" ${_distrname}"." ""
 read -p "Do you want to continue? (y/n): " replydistr
-_replydistr=${replydistr,,} # # to lower case
+_replydistr=${replydistr,,} # to lower case
 if [[ $_replydistr =~ ^(yes|y) ]]; then
   _distrnumber=$distrnumber
 else
