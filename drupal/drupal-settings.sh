@@ -42,7 +42,7 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
     chmod 0775 sites/default
 # Path to tmp directory
     read -p "Do you want to make a temporary directory ./tmp? (y/n): " replytmp
-    _replytmp=${replytmp,,} # # to lower case
+    _replytmp=${replytmp,,} # to lower case
     if [[ $_replytmp =~ ^(yes|y) ]]; then
         if ! grep -q 'file_temporary_path' sites/default/settings.php ; then
             echo -n $'$conf[\'file_temporary_path\'] = \'../tmp\';' >> sites/default/settings.php
