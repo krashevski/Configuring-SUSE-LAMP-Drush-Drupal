@@ -13,7 +13,7 @@
 printf "%s\n" "" "Run the script from the directory of site." ""
 #
 read -p "Do you want to continue? (y/n): " replydir
-_replydir=${replydir,,} # # to lower case
+_replydir=${replydir,,} # to lower case
 if [[ $_replydir =~ ^(yes|y) ]]; then
     _user=`find $directoryname -maxdepth 0 -printf '%u\n'`
 #
@@ -22,7 +22,7 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
 #
 # Install popular Drupal SEO modules
     read -p "Do you want to install popular Drupal SEO modules? (y/n): " replymod
-    _replymod=${replymod,,} # # to lower case
+    _replymod=${replymod,,} # to lower case
     if [[ $_replymod =~ ^(yes|y) ]]; then
         printf "%s\n" "" "Process of installing popular Drupal SEO modules..." ""
         drush dl transliteration, pathauto, globalredirect, page_title, xmlsitemap, search404
