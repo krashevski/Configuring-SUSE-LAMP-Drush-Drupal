@@ -13,7 +13,7 @@
 printf "%s\n" "" "Run the script from the directory of site." ""
 #
 read -p "Do you want to continue? (y/n): " replydir
-_replydir=${replydir,,} # # to lower case
+_replydir=${replydir,,} # to lower case
 if [[ $_replydir =~ ^(yes|y) ]]; then
     _user=`find $directoryname -maxdepth 0 -printf '%u\n'`
 #
@@ -22,7 +22,7 @@ if [[ $_replydir =~ ^(yes|y) ]]; then
 #
 # Installation Drupal translation
     read -p "Do you want to install Drupal translation? (y/n): " replytranslation
-    _replytranslation=${replytranslation,,} # # to lower case
+    _replytranslation=${replytranslation,,} # to lower case
     if [[ $_replytranslation =~ ^(yes|y) ]]; then
 # Installation Drupal modules
         printf "%s\n" "" "Process of installing Drupal modules..." ""
