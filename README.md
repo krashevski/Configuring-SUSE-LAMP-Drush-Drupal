@@ -3,6 +3,8 @@ Configuring LAMP (Linux + Apache + MySQL + PHP) by operating system openSUSE to 
 
 There are scripts for the management of CMS Drupal and LAMP (Linux + Apache + MySQL + PHP) under the operating system openSUSE. 
 
+openSUSE is selected for use scripts in distributions of operating system compiled with SUSEStudio.
+
 Drupal installation directory /home/user/public_html/ in the same place or any convenient location to you may be located the scripts to install LAMP and Drupal:
 1. install-lamp.sh;
 2. install-drupal.sh.
